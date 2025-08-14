@@ -5,170 +5,85 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>LOVEQUEEN Official Store</title>
   <style>
-    :root{
-      --bg:#0b0b0b;--card:#141414;--text:#f6f6f6;--muted:#b7b7b7;
-      --accent:#ff5ca8;--accent-2:#8a5cff;
+    :root {
+      --bg: #00b0bb;
+      --card: #141414;
+      --text: #f6f6f6;
+      --muted: #b7b7b7;
+      --accent: #ffc5a8;
+      --accent-2: #8a5cff;
     }
-    *{box-sizing:border-box}
-    html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic UI","Yu Gothic",Meiryo,sans-serif}
-    a{color:inherit;text-decoration:none}
-    .container{max-width:1120px;margin:0 auto;padding:0 20px}
-    header{position:sticky;top:0;backdrop-filter:saturate(140%) blur(8px);background:rgba(11,11,11,.72);border-bottom:1px solid #222;z-index:10}
-    header .row{display:flex;align-items:center;justify-content:space-between;height:64px}
-    .logo{font-weight:800;letter-spacing:.18em}
-    nav a{opacity:.9;margin-left:18px}
-    nav a:hover{opacity:1}
-    .btn{display:inline-block;border-radius:999px;padding:12px 18px;background:var(--accent);color:#111;font-weight:700}
-    .btn.outline{background:transparent;border:1px solid #333;color:var(--text)}
-    .hero{position:relative;isolation:isolate}
-    .hero .bg{
-      position:absolute;inset:0;z-index:-1;
-      background:radial-gradient(1200px 600px at 15% -10%,rgba(255,92,168,.35),transparent 60%),
-                 radial-gradient(900px 500px at 100% 0,rgba(138,92,255,.35),transparent 60%),
-                 url('https://images.unsplash.com/photo-1519744346367-3f0b6f0a2c53?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat;
-      filter:saturate(110%) contrast(105%);
-      opacity:.38
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
-    .hero .wrap{padding:80px 0 56px}
-    .headline{font-size:clamp(28px,4.2vw,48px);line-height:1.15;margin:0 0 14px}
-    .lead{color:var(--muted);margin:0 0 26px}
-    .cta{display:flex;gap:12px;flex-wrap:wrap}
-    .section{padding:48px 0}
-    .grid{display:grid;gap:18px;grid-template-columns:repeat(4,minmax(0,1fr))}
-    @media (max-width:960px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-    @media (max-width:520px){.grid{grid-template-columns:1fr}}
-    .card{background:var(--card);border:1px solid #222;border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
-    .card .img{aspect-ratio:4/5;background:#111;overflow:hidden}
-    .card .img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
-    .card:hover .img img{transform:scale(1.04)}
-    .card .body{padding:12px 14px 14px}
-    .title{font-weight:700;margin:0 0 6px;font-size:15px}
-    .price{color:var(--muted);font-size:14px}
-    .section-head{display:flex;justify-content:space-between;align-items:center;margin:0 0 14px}
-    .section-head h2{margin:0;font-size:20px}
-    footer{margin-top:40px;border-top:1px solid #222;background:#0e0e0e}
-    footer .col{display:grid;gap:8px}
-    .note{color:#8c8c8c;font-size:12px}
-    .pill{display:inline-block;font-size:12px;border:1px solid #333;padding:6px 10px;border-radius:999px;color:#d9d9d9}
+    a { color: inherit; text-decoration: none; }
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      background: rgba(11, 11, 11, .72);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #222;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      padding: 0 20px;
+    }
+    .logo { font-weight: 800; letter-spacing: .18em; }
+    nav a { opacity: .9; margin-left: 18px; }
+    nav a:hover { opacity: 1; }
+
+    main {
+      padding: 40px 20px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    footer {
+      padding: 20px;
+      font-size: 0.9rem;
+      text-align: center;
+      color: var(--muted);
+    }
   </style>
 </head>
 <body>
   <header>
-    <div class="container row">
-      <div class="row">
-        <span class="pill">LIVE</span>
-      </div>
-      <div class="container row">
-        <div class="logo">LOVEQUEEN</div>
-        <nav>
-          <a href="#new">新作</a>
-          <a href="#best">ベストセラー</a>
-          <a href="#about">ブランド</a>
-        </nav>
-      </div>
-    </div>
+    <div class="logo">LOVEQUEEN</div>
+    <nav>
+      <a href="#">ホーム</a>
+      <a href="#">商品一覧</a>
+      <a href="#">お問い合わせ</a>
+    </nav>
   </header>
 
-  <section class="hero">
-    <div class="bg" aria-hidden="true"></div>
-    <div class="container wrap">
-      <h1 class="headline">すべての女性が、お姫様に。</h1>
-      <p class="lead">静かな美しさと気品、そして日常に宿る自信。LOVEQUEENは、あなたを主役にするためのオンラインブティックです。</p>
-      <div class="cta">
-        <a class="btn" href="#new">新作を見る</a>
-        <a class="btn outline" href="#best">人気アイテム</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="section container" id="new">
-    <div class="section-head">
-      <h2>NEW ARRIVALS</h2>
-      <a href="#" class="pill">もっと見る</a>
-    </div>
-    <div class="grid">
-      <article class="card">
-        <div class="img"><img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1200&auto=format&fit=crop" alt="One-Shoulder Dress" /></div>
-        <div class="body">
-          <p class="title">ワンショルダードレス</p>
-          <p class="price">¥12,800</p>
-        </div>
-      </article>
-      <article class="card">
-        <div class="img"><img src="https://images.unsplash.com/photo-1520975682031-ae7c184d9f8b?q=80&w=1200&auto=format&fit=crop" alt="Satin Skirt" /></div>
-        <div class="body">
-          <p class="title">サテンミディスカート</p>
-          <p class="price">¥9,800</p>
-        </div>
-      </article>
-      <article class="card">
-        <div class="img"><img src="https://images.unsplash.com/photo-1514996937319-344454492b37?q=80&w=1200&auto=format&fit=crop" alt="Classic Blazer" /></div>
-        <div class="body">
-          <p class="title">クラシック・ブレザー</p>
-          <p class="price">¥14,600</p>
-        </div>
-      </article>
-      <article class="card">
-        <div class="img"><img src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop" alt="Tweed Set" /></div>
-        <div class="body">
-          <p class="title">ツイードセットアップ</p>
-          <p class="price">¥18,400</p>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <section class="section container" id="best">
-    <div class="section-head">
-      <h2>BEST SELLERS</h2>
-      <span class="note">注目が集まっている人気アイテム</span>
-    </div>
-    <div class="grid">
-      <article class="card">
-        <div class="img"><img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1200&auto=format&fit=crop" alt="Mini Bag" /></div>
-        <div class="body">
-          <p class="title">ミニトップハンドルバッグ</p>
-          <p class="price">¥8,900</p>
-        </div>
-      </article>
-      <article class="card">
-        <div class="img"><img src="https://images.unsplash.com/photo-1520975682031-ae7c184d9f8b?q=80&w=1200&auto=format&fit=crop" alt="Heel Pumps" /></div>
-        <div class="body">
-          <p class="title">スクエアトゥ・パンプス</p>
-          <p class="price">¥10,500</p>
-        </div>
-      </article>
-      <article class="card">
-        <div class="img"><img src="https://images.unsplash.com/photo-1514996937319-344454492b37?q=80&w=1200&auto=format&fit=crop" alt="Pearl Necklace" /></div>
-        <div class="body">
-          <p class="title">パールネックレス</p>
-          <p class="price">¥6,200</p>
-        </div>
-      </article>
-      <article class="card">
-        <div class="img"><img src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop" alt="Knit Cardigan" /></div>
-        <div class="body">
-          <p class="title">ソフトニット・カーディガン</p>
-          <p class="price">¥7,700</p>
-        </div>
-      </article>
-    </div>
-  </section>
+  <main>
+    <h1>すべての女性がお姫様に</h1>
+    <p>LOVEQUEENは上品さと可愛らしさを融合したスカートブランド。  
+    日常にラグジュアリーなひとときをお届けします。</p>
+  </main>
 
   <footer>
-    <div class="container section" id="about">
-      <div class="section-head">
-        <h2>LOVEQUEENについて</h2>
-      </div>
-      <p class="note">
-        私たちは「すべての女性が、お姫様に」をミッションに掲げるオンラインブティックです。  
-        ブランドストーリー、採用情報、コラボレーションのご相談は hello@lovequeen.jp まで。
-      </p>
-      <div class="col" style="margin-top:16px">
-        <span class="note">© 2025 LOVEQUEEN – All rights reserved.</span>
-      </div>
-    </div>
+    &copy; 2025 LOVEQUEEN Inc. All rights reserved.
   </footer>
 </body>
 </html>
-
