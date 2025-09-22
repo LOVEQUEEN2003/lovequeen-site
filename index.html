@@ -1,138 +1,1481 @@
 <!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LoveQueen - プレミアムオンラインショップ</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        'loewe': ['Helvetica Neue', 'Arial', 'sans-serif']
-                    },
-                    colors: {
-                        'loewe-beige': '#f5f4f2',
-                        'loewe-brown': '#8b7355',
-                        'loewe-black': '#1a1a1a',
-                        'loewe-gray': '#666666'
-                    }
-                }
-            }
-        }
-    </script>
-    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="webapp/public/styles.css" rel="stylesheet">
-</head>
-<body class="bg-loewe-beige font-loewe">
-    <!-- ヘッダー -->
-    <header class="bg-white border-b border-gray-200">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex items-center">
-                    <h1 class="text-3xl font-light tracking-wider text-loewe-black uppercase">
-                        LoveQueen
-                    </h1>
-                </div>
-                <nav class="hidden md:flex space-x-12">
-                    <a href="#" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">Collection</a>
-                    <a href="#" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">Categories</a>
-                    <a href="#" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">Contact</a>
-                </nav>
-                <div class="flex items-center space-x-8">
-                    <button id="cartButton" class="relative text-loewe-gray hover:text-loewe-black transition-colors">
-                        <i class="far fa-shopping-bag text-lg"></i>
-                        <span id="cartCount" class="absolute -top-1 -right-1 bg-loewe-brown text-white rounded-full w-4 h-4 flex items-center justify-center text-xs hidden">0</span>
-                    </button>
-                    <div id="authButtons" class="flex space-x-6">
-                        <button id="loginButton" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">
-                            Sign In
-                        </button>
-                        <button id="registerButton" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">
-                            Register
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- メインコンテンツ -->
-    <main class="max-w-6xl mx-auto px-6">
-        <!-- ヒーローセクション -->
-        <section class="py-20 text-center border-b border-gray-200">
-            <div class="max-w-2xl mx-auto">
-                <h2 class="text-6xl font-light text-loewe-black mb-8 tracking-wider uppercase">
-                    Autumn<br>Collection
-                </h2>
-                <p class="text-lg text-loewe-gray mb-12 leading-relaxed">
-                    Discover our carefully curated selection of premium goods,<br>
-                    crafted with exceptional attention to detail.
-                </p>
-                <button onclick="loadProducts()" class="border border-loewe-black text-loewe-black px-8 py-4 text-sm uppercase tracking-wider hover:bg-loewe-black hover:text-white transition-all duration-300">
-                    Explore Collection
-                </button>
-            </div>
-        </section>
-
-        <!-- 商品カテゴリ -->
-        <section class="py-16 border-b border-gray-200">
-            <h3 class="text-2xl font-light text-loewe-black mb-12 text-center uppercase tracking-wider">Categories</h3>
-            <div id="categoriesContainer" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
-                <!-- カテゴリがここに動的に表示されます -->
-            </div>
-        </section>
-
-        <!-- 人気商品 -->
-        <section class="py-16">
-            <h3 class="text-2xl font-light text-loewe-black mb-12 text-center uppercase tracking-wider">Featured</h3>
-            <div id="featuredProducts" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-                <!-- 人気商品がここに動的に表示されます -->
-            </div>
-        </section>
-
-        <!-- 商品一覧 -->
-        <section id="productsSection" class="hidden py-16 border-t border-gray-200">
-            <div class="flex justify-between items-center mb-12">
-                <h3 class="text-2xl font-light text-loewe-black uppercase tracking-wider">Collection</h3>
-                <div class="flex items-center space-x-6">
-                    <select id="sortSelect" class="border border-gray-300 px-4 py-2 text-sm text-loewe-gray bg-white">
-                        <option value="created_at">Newest First</option>
-                        <option value="price_asc">Price: Low to High</option>
-                        <option value="price_desc">Price: High to Low</option>
-                        <option value="name">Alphabetical</option>
-                    </select>
-                    <input id="searchInput" type="text" placeholder="Search products..." class="border border-gray-300 px-4 py-2 text-sm text-loewe-gray bg-white w-64">
-                    <button onclick="searchProducts()" class="border border-loewe-black text-loewe-black px-4 py-2 text-sm hover:bg-loewe-black hover:text-white transition-all">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-            </div>
-            <div id="productsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-                <!-- 商品がここに動的に表示されます -->
-            </div>
-        </section>
-    </main>
-
-    <!-- フッター -->
-    <footer class="bg-white border-t border-gray-200 py-16 mt-20">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
-                <div class="md:col-span-2">
-                    <h3 class="text-2xl font-light text-loewe-black mb-6 uppercase tracking-wider">LoveQueen</h3>
-                    <p class="text-loewe-gray leading-relaxed mb-6">
-                        Exceptional craftsmanship meets contemporary design.<br>
-                        Discover timeless pieces that define luxury.
-                    </p>
-                    <p class="text-xs text-loewe-gray uppercase tracking-wide">© 2024 LoveQueen. All rights reserved.</p>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
-    <script src="webapp/public/app.js"></script>
-</body>
-</html>
-
+     2	<html lang="ja">
+     3	<head>
+     4	    <meta charset="UTF-8">
+     5	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     6	    <title>LoveQueen - Premium Online Shop</title>
+     7	    <script src="https://cdn.tailwindcss.com"></script>
+     8	    <script>
+     9	        tailwind.config = {
+    10	            theme: {
+    11	                extend: {
+    12	                    fontFamily: {
+    13	                        'loewe': ['Helvetica Neue', 'Arial', 'sans-serif']
+    14	                    },
+    15	                    colors: {
+    16	                        'loewe-beige': '#f5f4f2',
+    17	                        'loewe-brown': '#8b7355',
+    18	                        'loewe-black': '#1a1a1a',
+    19	                        'loewe-gray': '#666666',
+    20	                        'admin-blue': '#3b82f6'
+    21	                    }
+    22	                }
+    23	            }
+    24	        }
+    25	    </script>
+    26	    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    27	</head>
+    28	<body class="bg-loewe-beige font-loewe">
+    29	    <!-- 管理者ツールバー（ログイン時のみ表示） -->
+    30	    <div id="adminToolbar" class="hidden bg-admin-blue text-white py-2">
+    31	        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+    32	            <div class="flex items-center space-x-4">
+    33	                <i class="fas fa-tools"></i>
+    34	                <span class="text-sm">管理者モード</span>
+    35	            </div>
+    36	            <div class="flex items-center space-x-4">
+    37	                <button onclick="showAdminPanel()" class="text-sm hover:underline">
+    38	                    <i class="fas fa-cog mr-1"></i>管理画面
+    39	                </button>
+    40	                <button onclick="toggleEditMode()" id="editModeBtn" class="text-sm hover:underline">
+    41	                    <i class="fas fa-edit mr-1"></i>編集モード: OFF
+    42	                </button>
+    43	                <button onclick="adminLogout()" class="text-sm hover:underline">
+    44	                    <i class="fas fa-sign-out-alt mr-1"></i>ログアウト
+    45	                </button>
+    46	            </div>
+    47	        </div>
+    48	    </div>
+    49	
+    50	    <!-- メインヘッダー -->
+    51	    <header class="bg-white border-b border-gray-200 relative">
+    52	        <div class="max-w-6xl mx-auto px-6">
+    53	            <div class="flex items-center justify-between h-20">
+    54	                <div class="flex items-center">
+    55	                    <h1 class="text-3xl font-light tracking-wider text-loewe-black uppercase cursor-pointer" onclick="goHome()">
+    56	                        <span id="siteName" class="editable" data-field="siteName">LoveQueen</span>
+    57	                    </h1>
+    58	                </div>
+    59	                <nav class="hidden md:flex space-x-12">
+    60	                    <a href="#" onclick="showSection('collection')" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">Collection</a>
+    61	                    <a href="#" onclick="showSection('categories')" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">Categories</a>
+    62	                    <a href="#" onclick="showSection('about')" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">About</a>
+    63	                    <a href="#" onclick="showSection('contact')" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">Contact</a>
+    64	                </nav>
+    65	                <div class="flex items-center space-x-8">
+    66	                    <button id="cartButton" onclick="openCart()" class="relative text-loewe-gray hover:text-loewe-black transition-colors">
+    67	                        <i class="fas fa-shopping-bag text-lg"></i>
+    68	                        <span id="cartCount" class="absolute -top-1 -right-1 bg-loewe-brown text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hidden">0</span>
+    69	                    </button>
+    70	                    <div id="authButtons" class="flex space-x-6">
+    71	                        <button id="loginButton" onclick="openLoginModal()" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">
+    72	                            Sign In
+    73	                        </button>
+    74	                        <button id="registerButton" onclick="openRegisterModal()" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">
+    75	                            Register
+    76	                        </button>
+    77	                    </div>
+    78	                    <div id="userMenu" class="hidden relative">
+    79	                        <button id="userMenuButton" class="flex items-center text-loewe-gray hover:text-loewe-black transition-colors">
+    80	                            <i class="fas fa-user mr-2"></i>
+    81	                            <span id="userName" class="text-sm uppercase tracking-wide">Account</span>
+    82	                            <i class="fas fa-chevron-down ml-2 text-xs"></i>
+    83	                        </button>
+    84	                        <div id="userDropdown" class="hidden absolute right-0 mt-3 w-48 bg-white border border-gray-200 shadow-lg z-50 rounded-md">
+    85	                            <div class="py-2">
+    86	                                <a href="#" onclick="showProfile()" class="block px-4 py-3 text-xs text-loewe-gray hover:text-loewe-black hover:bg-gray-50 uppercase tracking-wide">
+    87	                                    Profile
+    88	                                </a>
+    89	                                <a href="#" onclick="showOrders()" class="block px-4 py-3 text-xs text-loewe-gray hover:text-loewe-black hover:bg-gray-50 uppercase tracking-wide">
+    90	                                    Orders
+    91	                                </a>
+    92	                                <div id="adminMenuItems" class="hidden">
+    93	                                    <hr class="border-gray-100">
+    94	                                    <a href="#" onclick="showAdminPanel()" class="block px-4 py-3 text-xs text-blue-600 hover:text-blue-800 hover:bg-blue-50 uppercase tracking-wide">
+    95	                                        <i class="fas fa-cog mr-2"></i>Admin Panel
+    96	                                    </a>
+    97	                                </div>
+    98	                                <hr class="border-gray-100">
+    99	                                <a href="#" onclick="logout()" class="block px-4 py-3 text-xs text-loewe-gray hover:text-loewe-black hover:bg-gray-50 uppercase tracking-wide">
+   100	                                    Sign Out
+   101	                                </a>
+   102	                            </div>
+   103	                        </div>
+   104	                    </div>
+   105	                </div>
+   106	            </div>
+   107	        </div>
+   108	        
+   109	        <!-- 編集モード用の商品追加ボタン -->
+   110	        <div id="addProductFab" class="hidden fixed bottom-6 right-6 z-50">
+   111	            <button onclick="openProductModal()" class="bg-admin-blue text-white rounded-full w-14 h-14 shadow-lg hover:bg-blue-600 transition-colors">
+   112	                <i class="fas fa-plus text-xl"></i>
+   113	            </button>
+   114	        </div>
+   115	    </header>
+   116	
+   117	    <!-- メインコンテンツ -->
+   118	    <main class="max-w-6xl mx-auto px-6">
+   119	        <!-- ホームセクション -->
+   120	        <section id="homeSection" class="section-content">
+   121	            <!-- ヒーローセクション -->
+   122	            <div class="py-20 text-center border-b border-gray-200 relative">
+   123	                <div class="max-w-2xl mx-auto">
+   124	                    <h2 class="text-6xl font-light text-loewe-black mb-8 tracking-wider uppercase">
+   125	                        <span id="heroTitle" class="editable" data-field="heroTitle">Autumn<br>Collection</span>
+   126	                    </h2>
+   127	                    <p class="text-lg text-loewe-gray mb-12 leading-relaxed">
+   128	                        <span id="heroDescription" class="editable" data-field="heroDescription">
+   129	                            Discover our carefully curated selection of premium goods,<br>
+   130	                            crafted with exceptional attention to detail.
+   131	                        </span>
+   132	                    </p>
+   133	                    <button onclick="showSection('collection')" class="border border-loewe-black text-loewe-black px-8 py-4 text-sm uppercase tracking-wider hover:bg-loewe-black hover:text-white transition-all duration-300">
+   134	                        <span id="heroButton" class="editable" data-field="heroButton">Explore Collection</span>
+   135	                    </button>
+   136	                </div>
+   137	                <!-- 編集ボタン（編集モード時のみ表示） -->
+   138	                <div class="edit-controls hidden absolute top-4 right-4">
+   139	                    <button onclick="editHeroSection()" class="bg-admin-blue text-white px-3 py-1 rounded text-sm">
+   140	                        <i class="fas fa-edit mr-1"></i>Edit Hero
+   141	                    </button>
+   142	                </div>
+   143	            </div>
+   144	
+   145	            <!-- カテゴリセクション -->
+   146	            <div class="py-16 border-b border-gray-200 relative">
+   147	                <h3 class="text-2xl font-light text-loewe-black mb-12 text-center uppercase tracking-wider">
+   148	                    <span id="categoriesTitle" class="editable" data-field="categoriesTitle">Categories</span>
+   149	                </h3>
+   150	                <div id="categoriesContainer" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
+   151	                    <!-- カテゴリがここに動的に表示されます -->
+   152	                </div>
+   153	                <!-- 編集ボタン（編集モード時のみ表示） -->
+   154	                <div class="edit-controls hidden absolute top-4 right-4">
+   155	                    <button onclick="openCategoryModal()" class="bg-admin-blue text-white px-3 py-1 rounded text-sm mr-2">
+   156	                        <i class="fas fa-plus mr-1"></i>Add Category
+   157	                    </button>
+   158	                    <button onclick="editCategories()" class="bg-admin-blue text-white px-3 py-1 rounded text-sm">
+   159	                        <i class="fas fa-edit mr-1"></i>Edit
+   160	                    </button>
+   161	                </div>
+   162	            </div>
+   163	
+   164	            <!-- 人気商品セクション -->
+   165	            <div class="py-16 relative">
+   166	                <h3 class="text-2xl font-light text-loewe-black mb-12 text-center uppercase tracking-wider">
+   167	                    <span id="featuredTitle" class="editable" data-field="featuredTitle">Featured Products</span>
+   168	                </h3>
+   169	                <div id="featuredProducts" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+   170	                    <!-- 人気商品がここに動的に表示されます -->
+   171	                </div>
+   172	                <!-- 編集ボタン（編集モード時のみ表示） -->
+   173	                <div class="edit-controls hidden absolute top-4 right-4">
+   174	                    <button onclick="manageFeatured()" class="bg-admin-blue text-white px-3 py-1 rounded text-sm">
+   175	                        <i class="fas fa-star mr-1"></i>Manage Featured
+   176	                    </button>
+   177	                </div>
+   178	            </div>
+   179	        </section>
+   180	
+   181	        <!-- 商品一覧セクション -->
+   182	        <section id="collectionSection" class="section-content hidden py-16 border-t border-gray-200">
+   183	            <div class="flex justify-between items-center mb-12">
+   184	                <h3 class="text-2xl font-light text-loewe-black uppercase tracking-wider">All Products</h3>
+   185	                <div class="flex items-center space-x-6">
+   186	                    <select id="sortSelect" class="border border-gray-300 px-4 py-2 text-sm text-loewe-gray bg-white rounded" onchange="sortProducts()">
+   187	                        <option value="newest">Newest First</option>
+   188	                        <option value="price_asc">Price: Low to High</option>
+   189	                        <option value="price_desc">Price: High to Low</option>
+   190	                        <option value="name">Alphabetical</option>
+   191	                        <option value="featured">Featured First</option>
+   192	                    </select>
+   193	                    <div class="relative">
+   194	                        <input id="searchInput" type="text" placeholder="Search products..." 
+   195	                               class="border border-gray-300 px-4 py-2 text-sm text-loewe-gray bg-white w-64 rounded pl-10"
+   196	                               onkeyup="searchProducts(event)">
+   197	                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+   198	                    </div>
+   199	                </div>
+   200	            </div>
+   201	            
+   202	            <!-- フィルター -->
+   203	            <div class="mb-8 flex flex-wrap gap-4">
+   204	                <select id="categoryFilter" class="border border-gray-300 px-4 py-2 text-sm bg-white rounded" onchange="filterProducts()">
+   205	                    <option value="">All Categories</option>
+   206	                </select>
+   207	                <select id="priceFilter" class="border border-gray-300 px-4 py-2 text-sm bg-white rounded" onchange="filterProducts()">
+   208	                    <option value="">All Prices</option>
+   209	                    <option value="0-5000">¥0 - ¥5,000</option>
+   210	                    <option value="5000-10000">¥5,000 - ¥10,000</option>
+   211	                    <option value="10000-20000">¥10,000 - ¥20,000</option>
+   212	                    <option value="20000-50000">¥20,000 - ¥50,000</option>
+   213	                    <option value="50000+">¥50,000+</option>
+   214	                </select>
+   215	                <button onclick="clearFilters()" class="text-loewe-gray hover:text-loewe-black text-sm">
+   216	                    <i class="fas fa-times mr-1"></i>Clear Filters
+   217	                </button>
+   218	            </div>
+   219	            
+   220	            <div id="productsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+   221	                <!-- 商品がここに動的に表示されます -->
+   222	            </div>
+   223	            
+   224	            <!-- Load More / Pagination -->
+   225	            <div id="loadMoreSection" class="text-center mt-16">
+   226	                <button id="loadMoreBtn" onclick="loadMoreProducts()" 
+   227	                        class="border border-loewe-black text-loewe-black px-8 py-4 text-sm uppercase tracking-wide hover:bg-loewe-black hover:text-white transition-all">
+   228	                    Load More Products
+   229	                </button>
+   230	            </div>
+   231	        </section>
+   232	
+   233	        <!-- その他のセクション -->
+   234	        <section id="categoriesSection" class="section-content hidden py-16">
+   235	            <h2 class="text-3xl font-light text-loewe-black mb-12 text-center uppercase tracking-wider">Shop by Category</h2>
+   236	            <div id="allCategoriesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+   237	                <!-- 全カテゴリがここに表示 -->
+   238	            </div>
+   239	        </section>
+   240	
+   241	        <section id="aboutSection" class="section-content hidden py-16">
+   242	            <div class="max-w-4xl mx-auto text-center">
+   243	                <h2 class="text-3xl font-light text-loewe-black mb-8 uppercase tracking-wider">About LoveQueen</h2>
+   244	                <div class="prose prose-lg mx-auto">
+   245	                    <p class="text-loewe-gray leading-relaxed mb-6">
+   246	                        <span id="aboutText" class="editable" data-field="aboutText">
+   247	                            LoveQueen represents the pinnacle of contemporary luxury, where exceptional craftsmanship meets timeless design. 
+   248	                            Our carefully curated collection celebrates the art of fine living through meticulously selected pieces that 
+   249	                            define modern elegance.
+   250	                        </span>
+   251	                    </p>
+   252	                </div>
+   253	            </div>
+   254	        </section>
+   255	
+   256	        <section id="contactSection" class="section-content hidden py-16">
+   257	            <div class="max-w-2xl mx-auto">
+   258	                <h2 class="text-3xl font-light text-loewe-black mb-12 text-center uppercase tracking-wider">Contact Us</h2>
+   259	                <form id="contactForm" class="space-y-6">
+   260	                    <div>
+   261	                        <label class="block text-sm font-medium text-loewe-black mb-2">Name</label>
+   262	                        <input type="text" name="name" required class="w-full border border-gray-300 px-4 py-3 rounded focus:outline-none focus:border-loewe-brown">
+   263	                    </div>
+   264	                    <div>
+   265	                        <label class="block text-sm font-medium text-loewe-black mb-2">Email</label>
+   266	                        <input type="email" name="email" required class="w-full border border-gray-300 px-4 py-3 rounded focus:outline-none focus:border-loewe-brown">
+   267	                    </div>
+   268	                    <div>
+   269	                        <label class="block text-sm font-medium text-loewe-black mb-2">Message</label>
+   270	                        <textarea name="message" rows="6" required class="w-full border border-gray-300 px-4 py-3 rounded focus:outline-none focus:border-loewe-brown"></textarea>
+   271	                    </div>
+   272	                    <button type="submit" class="w-full bg-loewe-black text-white py-4 text-sm uppercase tracking-wider hover:bg-loewe-brown transition-colors">
+   273	                        Send Message
+   274	                    </button>
+   275	                </form>
+   276	            </div>
+   277	        </section>
+   278	    </main>
+   279	
+   280	    <!-- フッター -->
+   281	    <footer class="bg-white border-t border-gray-200 py-16 mt-20">
+   282	        <div class="max-w-6xl mx-auto px-6">
+   283	            <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+   284	                <!-- ブランド情報 -->
+   285	                <div class="md:col-span-2">
+   286	                    <h3 class="text-2xl font-light text-loewe-black mb-6 uppercase tracking-wider">
+   287	                        <span id="footerBrand" class="editable" data-field="footerBrand">LoveQueen</span>
+   288	                    </h3>
+   289	                    <p class="text-loewe-gray leading-relaxed mb-6">
+   290	                        <span id="footerDescription" class="editable" data-field="footerDescription">
+   291	                            Exceptional craftsmanship meets contemporary design.<br>
+   292	                            Discover timeless pieces that define luxury.
+   293	                        </span>
+   294	                    </p>
+   295	                    <p class="text-xs text-loewe-gray uppercase tracking-wide">© 2024 LoveQueen. All rights reserved.</p>
+   296	                </div>
+   297	                
+   298	                <!-- リンク -->
+   299	                <div>
+   300	                    <h4 class="text-sm font-medium text-loewe-black mb-6 uppercase tracking-wide">Services</h4>
+   301	                    <ul class="space-y-3">
+   302	                        <li><a href="#" onclick="showSection('collection')" class="text-loewe-gray hover:text-loewe-black text-sm transition-colors">Collection</a></li>
+   303	                        <li><a href="#" onclick="showSection('contact')" class="text-loewe-gray hover:text-loewe-black text-sm transition-colors">Contact</a></li>
+   304	                        <li><a href="#" class="text-loewe-gray hover:text-loewe-black text-sm transition-colors">Terms</a></li>
+   305	                        <li><a href="#" class="text-loewe-gray hover:text-loewe-black text-sm transition-colors">Privacy</a></li>
+   306	                    </ul>
+   307	                </div>
+   308	                
+   309	                <!-- SNS -->
+   310	                <div>
+   311	                    <h4 class="text-sm font-medium text-loewe-black mb-6 uppercase tracking-wide">Follow</h4>
+   312	                    <div id="socialLinks" class="flex space-x-4">
+   313	                        <!-- SNSリンクがここに動的に表示されます -->
+   314	                    </div>
+   315	                </div>
+   316	            </div>
+   317	        </div>
+   318	    </footer>
+   319	
+   320	    <!-- ショッピングカートサイドバー -->
+   321	    <div id="cartSidebar" class="fixed inset-y-0 right-0 w-96 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out z-50">
+   322	        <div class="flex flex-col h-full">
+   323	            <div class="flex items-center justify-between p-6 border-b">
+   324	                <h3 class="text-lg font-medium">Shopping Cart</h3>
+   325	                <button onclick="closeCart()" class="text-gray-400 hover:text-gray-600">
+   326	                    <i class="fas fa-times text-xl"></i>
+   327	                </button>
+   328	            </div>
+   329	            
+   330	            <div id="cartItems" class="flex-1 overflow-y-auto p-6">
+   331	                <!-- カート商品がここに表示 -->
+   332	            </div>
+   333	            
+   334	            <div class="border-t p-6">
+   335	                <div class="flex justify-between items-center mb-4">
+   336	                    <span class="text-lg font-medium">Total:</span>
+   337	                    <span id="cartTotal" class="text-xl font-bold">¥0</span>
+   338	                </div>
+   339	                <button id="checkoutBtn" onclick="proceedToCheckout()" 
+   340	                        class="w-full bg-loewe-black text-white py-3 text-sm uppercase tracking-wider hover:bg-loewe-brown transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+   341	                        disabled>
+   342	                    Proceed to Checkout
+   343	                </button>
+   344	                <button onclick="clearCart()" class="w-full mt-2 text-loewe-gray hover:text-loewe-black text-sm">
+   345	                    Clear Cart
+   346	                </button>
+   347	            </div>
+   348	        </div>
+   349	    </div>
+   350	
+   351	    <!-- 管理者パネル -->
+   352	    <div id="adminPanel" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 z-50">
+   353	        <div class="flex items-center justify-center min-h-screen p-4">
+   354	            <div class="bg-white rounded-lg shadow-xl w-full max-w-6xl max-h-screen overflow-y-auto">
+   355	                <div class="flex items-center justify-between p-6 border-b">
+   356	                    <h2 class="text-2xl font-bold">Admin Panel - LoveQueen</h2>
+   357	                    <button onclick="closeAdminPanel()" class="text-gray-400 hover:text-gray-600">
+   358	                        <i class="fas fa-times text-xl"></i>
+   359	                    </button>
+   360	                </div>
+   361	                
+   362	                <div class="p-6">
+   363	                    <!-- 管理タブ -->
+   364	                    <div class="flex space-x-1 mb-8 bg-gray-100 p-1 rounded-lg">
+   365	                        <button onclick="showAdminTab('products')" class="admin-tab-btn active" data-tab="products">
+   366	                            <i class="fas fa-box mr-2"></i>Products
+   367	                        </button>
+   368	                        <button onclick="showAdminTab('orders')" class="admin-tab-btn" data-tab="orders">
+   369	                            <i class="fas fa-shopping-cart mr-2"></i>Orders
+   370	                        </button>
+   371	                        <button onclick="showAdminTab('customers')" class="admin-tab-btn" data-tab="customers">
+   372	                            <i class="fas fa-users mr-2"></i>Customers
+   373	                        </button>
+   374	                        <button onclick="showAdminTab('analytics')" class="admin-tab-btn" data-tab="analytics">
+   375	                            <i class="fas fa-chart-bar mr-2"></i>Analytics
+   376	                        </button>
+   377	                        <button onclick="showAdminTab('settings')" class="admin-tab-btn" data-tab="settings">
+   378	                            <i class="fas fa-cog mr-2"></i>Settings
+   379	                        </button>
+   380	                    </div>
+   381	
+   382	                    <!-- 商品管理タブ -->
+   383	                    <div id="adminProductsTab" class="admin-tab-content">
+   384	                        <div class="flex justify-between items-center mb-6">
+   385	                            <h3 class="text-xl font-semibold">Product Management</h3>
+   386	                            <button onclick="openProductModal()" class="bg-admin-blue text-white px-4 py-2 rounded hover:bg-blue-600">
+   387	                                <i class="fas fa-plus mr-2"></i>Add Product
+   388	                            </button>
+   389	                        </div>
+   390	                        
+   391	                        <div class="bg-white border rounded-lg overflow-hidden">
+   392	                            <div class="overflow-x-auto">
+   393	                                <table class="min-w-full divide-y divide-gray-200">
+   394	                                    <thead class="bg-gray-50">
+   395	                                        <tr>
+   396	                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+   397	                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+   398	                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+   399	                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+   400	                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+   401	                                        </tr>
+   402	                                    </thead>
+   403	                                    <tbody id="adminProductsTable" class="bg-white divide-y divide-gray-200">
+   404	                                        <!-- 商品データがここに表示 -->
+   405	                                    </tbody>
+   406	                                </table>
+   407	                            </div>
+   408	                        </div>
+   409	                    </div>
+   410	
+   411	                    <!-- その他のタブ内容 -->
+   412	                    <div id="adminOrdersTab" class="admin-tab-content hidden">
+   413	                        <h3 class="text-xl font-semibold mb-6">Order Management</h3>
+   414	                        <div id="adminOrdersTable">
+   415	                            <!-- 注文データがここに表示 -->
+   416	                        </div>
+   417	                    </div>
+   418	
+   419	                    <div id="adminCustomersTab" class="admin-tab-content hidden">
+   420	                        <h3 class="text-xl font-semibold mb-6">Customer Management</h3>
+   421	                        <div id="adminCustomersTable">
+   422	                            <!-- 顧客データがここに表示 -->
+   423	                        </div>
+   424	                    </div>
+   425	
+   426	                    <div id="adminAnalyticsTab" class="admin-tab-content hidden">
+   427	                        <h3 class="text-xl font-semibold mb-6">Analytics & Reports</h3>
+   428	                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+   429	                            <div class="bg-blue-50 p-6 rounded-lg">
+   430	                                <div class="text-2xl font-bold text-blue-600" id="totalSales">¥0</div>
+   431	                                <div class="text-sm text-gray-600">Total Sales</div>
+   432	                            </div>
+   433	                            <div class="bg-green-50 p-6 rounded-lg">
+   434	                                <div class="text-2xl font-bold text-green-600" id="totalOrders">0</div>
+   435	                                <div class="text-sm text-gray-600">Total Orders</div>
+   436	                            </div>
+   437	                            <div class="bg-yellow-50 p-6 rounded-lg">
+   438	                                <div class="text-2xl font-bold text-yellow-600" id="totalProducts">0</div>
+   439	                                <div class="text-sm text-gray-600">Total Products</div>
+   440	                            </div>
+   441	                            <div class="bg-purple-50 p-6 rounded-lg">
+   442	                                <div class="text-2xl font-bold text-purple-600" id="totalCustomers">0</div>
+   443	                                <div class="text-sm text-gray-600">Total Customers</div>
+   444	                            </div>
+   445	                        </div>
+   446	                    </div>
+   447	
+   448	                    <div id="adminSettingsTab" class="admin-tab-content hidden">
+   449	                        <h3 class="text-xl font-semibold mb-6">Site Settings</h3>
+   450	                        <form id="siteSettingsForm" class="space-y-6">
+   451	                            <div>
+   452	                                <label class="block text-sm font-medium text-gray-700 mb-2">Site Name</label>
+   453	                                <input type="text" id="settingSiteName" class="w-full border border-gray-300 rounded-md px-4 py-2">
+   454	                            </div>
+   455	                            <div>
+   456	                                <label class="block text-sm font-medium text-gray-700 mb-2">Site Description</label>
+   457	                                <textarea id="settingSiteDescription" rows="3" class="w-full border border-gray-300 rounded-md px-4 py-2"></textarea>
+   458	                            </div>
+   459	                            <div>
+   460	                                <label class="block text-sm font-medium text-gray-700 mb-2">Contact Email</label>
+   461	                                <input type="email" id="settingContactEmail" class="w-full border border-gray-300 rounded-md px-4 py-2">
+   462	                            </div>
+   463	                            <button type="submit" class="bg-admin-blue text-white px-6 py-2 rounded hover:bg-blue-600">
+   464	                                Save Settings
+   465	                            </button>
+   466	                        </form>
+   467	                    </div>
+   468	                </div>
+   469	            </div>
+   470	        </div>
+   471	    </div>
+   472	
+   473	    <!-- 商品追加/編集モーダル -->
+   474	    <div id="productModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 z-50">
+   475	        <div class="flex items-center justify-center min-h-screen p-4">
+   476	            <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-screen overflow-y-auto">
+   477	                <div class="flex items-center justify-between p-6 border-b">
+   478	                    <h3 id="productModalTitle" class="text-xl font-bold">Add New Product</h3>
+   479	                    <button onclick="closeProductModal()" class="text-gray-400 hover:text-gray-600">
+   480	                        <i class="fas fa-times text-xl"></i>
+   481	                    </button>
+   482	                </div>
+   483	                
+   484	                <form id="productForm" class="p-6">
+   485	                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+   486	                        <!-- 基本情報 -->
+   487	                        <div>
+   488	                            <label class="block text-sm font-medium text-gray-700 mb-2">Product Name *</label>
+   489	                            <input type="text" id="productName" name="name" required class="w-full border border-gray-300 rounded-md px-4 py-2">
+   490	                        </div>
+   491	                        
+   492	                        <div>
+   493	                            <label class="block text-sm font-medium text-gray-700 mb-2">Price (¥) *</label>
+   494	                            <input type="number" id="productPrice" name="price" required class="w-full border border-gray-300 rounded-md px-4 py-2">
+   495	                        </div>
+   496	                        
+   497	                        <div>
+   498	                            <label class="block text-sm font-medium text-gray-700 mb-2">Category *</label>
+   499	                            <select id="productCategory" name="category_id" required class="w-full border border-gray-300 rounded-md px-4 py-2">
+   500	                                <option value="">Select Category</option>
+   501	                            </select>
+   502	                        </div>
+   503	                        
+   504	                        <div>
+   505	                            <label class="block text-sm font-medium text-gray-700 mb-2">SKU</label>
+   506	                            <input type="text" id="productSku" name="sku" class="w-full border border-gray-300 rounded-md px-4 py-2">
+   507	                        </div>
+   508	                        
+   509	                        <div>
+   510	                            <label class="block text-sm font-medium text-gray-700 mb-2">Stock Quantity</label>
+   511	                            <input type="number" id="productStock" name="stock" value="0" class="w-full border border-gray-300 rounded-md px-4 py-2">
+   512	                        </div>
+   513	                        
+   514	                        <div>
+   515	                            <label class="block text-sm font-medium text-gray-700 mb-2">Weight (g)</label>
+   516	                            <input type="number" id="productWeight" name="weight" class="w-full border border-gray-300 rounded-md px-4 py-2">
+   517	                        </div>
+   518	                        
+   519	                        <div class="md:col-span-2">
+   520	                            <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+   521	                            <textarea id="productDescription" name="description" rows="4" class="w-full border border-gray-300 rounded-md px-4 py-2"></textarea>
+   522	                        </div>
+   523	                        
+   524	                        <!-- 画像アップロード -->
+   525	                        <div class="md:col-span-2">
+   526	                            <label class="block text-sm font-medium text-gray-700 mb-2">Product Images</label>
+   527	                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6">
+   528	                                <input type="file" id="productImages" multiple accept="image/*" class="hidden" onchange="previewImages(this)">
+   529	                                <div id="imagePreviewContainer" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 hidden">
+   530	                                    <!-- 画像プレビューがここに表示 -->
+   531	                                </div>
+   532	                                <div id="imageUploadArea" class="text-center">
+   533	                                    <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+   534	                                    <p class="text-gray-600 mb-2">Drag & drop images or</p>
+   535	                                    <button type="button" onclick="document.getElementById('productImages').click()" 
+   536	                                            class="bg-admin-blue text-white px-4 py-2 rounded hover:bg-blue-600">
+   537	                                        Select Images
+   538	                                    </button>
+   539	                                    <p class="text-xs text-gray-500 mt-2">PNG, JPG, GIF up to 10MB each</p>
+   540	                                </div>
+   541	                            </div>
+   542	                        </div>
+   543	                        
+   544	                        <!-- 商品オプション -->
+   545	                        <div class="md:col-span-2">
+   546	                            <div class="grid grid-cols-2 gap-4">
+   547	                                <label class="flex items-center">
+   548	                                    <input type="checkbox" id="productFeatured" name="is_featured" class="mr-2">
+   549	                                    <span class="text-sm font-medium text-gray-700">Featured Product</span>
+   550	                                </label>
+   551	                                <label class="flex items-center">
+   552	                                    <input type="checkbox" id="productActive" name="is_active" checked class="mr-2">
+   553	                                    <span class="text-sm font-medium text-gray-700">Published</span>
+   554	                                </label>
+   555	                            </div>
+   556	                        </div>
+   557	                    </div>
+   558	                    
+   559	                    <div class="flex justify-between mt-8 pt-6 border-t">
+   560	                        <div>
+   561	                            <button type="button" id="deleteProductBtn" onclick="deleteProduct()" 
+   562	                                    class="hidden bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700">
+   563	                                <i class="fas fa-trash mr-2"></i>Delete Product
+   564	                            </button>
+   565	                        </div>
+   566	                        <div class="flex space-x-4">
+   567	                            <button type="button" onclick="closeProductModal()" class="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600">
+   568	                                Cancel
+   569	                            </button>
+   570	                            <button type="submit" class="bg-admin-blue text-white px-6 py-2 rounded hover:bg-blue-600">
+   571	                                <i class="fas fa-save mr-2"></i>Save Product
+   572	                            </button>
+   573	                        </div>
+   574	                    </div>
+   575	                </form>
+   576	            </div>
+   577	        </div>
+   578	    </div>
+   579	
+   580	    <!-- その他のモーダル -->
+   581	    <div id="loginModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 z-50">
+   582	        <!-- ログインモーダルの内容 -->
+   583	    </div>
+   584	
+   585	    <div id="registerModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 z-50">
+   586	        <!-- 登録モーダルの内容 -->
+   587	    </div>
+   588	
+   589	    <!-- カートオーバーレイ -->
+   590	    <div id="cartOverlay" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-40 hidden" onclick="closeCart()"></div>
+   591	
+   592	    <!-- JavaScript -->
+   593	    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+   594	    <script>
+   595	        // グローバル変数
+   596	        let currentUser = null;
+   597	        let products = [];
+   598	        let categories = [];
+   599	        let cart = [];
+   600	        let isEditMode = false;
+   601	        let currentPage = 1;
+   602	        const productsPerPage = 9;
+   603	
+   604	        // 初期化
+   605	        document.addEventListener('DOMContentLoaded', function() {
+   606	            initializeApp();
+   607	        });
+   608	
+   609	        function initializeApp() {
+   610	            loadSampleData();
+   611	            loadCartFromStorage();
+   612	            updateCartUI();
+   613	            loadFeaturedProducts();
+   614	            loadCategories();
+   615	            checkUserSession();
+   616	            setupEventListeners();
+   617	        }
+   618	
+   619	        // サンプルデータの読み込み
+   620	        function loadSampleData() {
+   621	            // サンプル商品データ
+   622	            products = [
+   623	                {
+   624	                    id: 1,
+   625	                    name: "Premium Leather Handbag",
+   626	                    price: 45800,
+   627	                    category_id: 1,
+   628	                    category_name: "Accessories",
+   629	                    description: "Crafted from the finest Italian leather, this sophisticated handbag embodies timeless elegance and functionality.",
+   630	                    image_url: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop",
+   631	                    stock: 15,
+   632	                    is_featured: true,
+   633	                    is_active: true,
+   634	                    sku: "LQ-BAG-001",
+   635	                    created_at: "2024-01-15"
+   636	                },
+   637	                {
+   638	                    id: 2,
+   639	                    name: "Cashmere Wool Coat",
+   640	                    price: 89000,
+   641	                    category_id: 2,
+   642	                    category_name: "Outerwear",
+   643	                    description: "Luxurious cashmere wool coat with minimalist design, perfect for autumn and winter seasons.",
+   644	                    image_url: "https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=400&h=400&fit=crop",
+   645	                    stock: 8,
+   646	                    is_featured: true,
+   647	                    is_active: true,
+   648	                    sku: "LQ-COAT-001",
+   649	                    created_at: "2024-01-20"
+   650	                },
+   651	                {
+   652	                    id: 3,
+   653	                    name: "Sterling Silver Watch",
+   654	                    price: 125000,
+   655	                    category_id: 1,
+   656	                    category_name: "Accessories",
+   657	                    description: "Precision-crafted timepiece with sterling silver case and leather strap, embodying understated luxury.",
+   658	                    image_url: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop",
+   659	                    stock: 12,
+   660	                    is_featured: false,
+   661	                    is_active: true,
+   662	                    sku: "LQ-WATCH-001",
+   663	                    created_at: "2024-01-25"
+   664	                },
+   665	                {
+   666	                    id: 4,
+   667	                    name: "Silk Scarf Collection",
+   668	                    price: 18500,
+   669	                    category_id: 1,
+   670	                    category_name: "Accessories",
+   671	                    description: "Hand-painted silk scarf featuring exclusive patterns inspired by nature and art.",
+   672	                    image_url: "https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=400&h=400&fit=crop",
+   673	                    stock: 25,
+   674	                    is_featured: true,
+   675	                    is_active: true,
+   676	                    sku: "LQ-SCARF-001",
+   677	                    created_at: "2024-02-01"
+   678	                },
+   679	                {
+   680	                    id: 5,
+   681	                    name: "Merino Wool Sweater",
+   682	                    price: 32000,
+   683	                    category_id: 3,
+   684	                    category_name: "Knitwear",
+   685	                    description: "Ultra-soft merino wool sweater with contemporary fit, available in seasonal colors.",
+   686	                    image_url: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop",
+   687	                    stock: 20,
+   688	                    is_featured: false,
+   689	                    is_active: true,
+   690	                    sku: "LQ-SWEATER-001",
+   691	                    created_at: "2024-02-05"
+   692	                },
+   693	                {
+   694	                    id: 6,
+   695	                    name: "Designer Sunglasses",
+   696	                    price: 28000,
+   697	                    category_id: 1,
+   698	                    category_name: "Accessories",
+   699	                    description: "UV-protection sunglasses with acetate frames, combining style and functionality.",
+   700	                    image_url: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=400&fit=crop",
+   701	                    stock: 18,
+   702	                    is_featured: false,
+   703	                    is_active: true,
+   704	                    sku: "LQ-SUNGLASS-001",
+   705	                    created_at: "2024-02-10"
+   706	                }
+   707	            ];
+   708	
+   709	            // サンプルカテゴリデータ
+   710	            categories = [
+   711	                { id: 1, name: "Accessories", description: "Luxury accessories for sophisticated lifestyle" },
+   712	                { id: 2, name: "Outerwear", description: "Premium coats and jackets for all seasons" },
+   713	                { id: 3, name: "Knitwear", description: "Soft and comfortable knitwear collection" },
+   714	                { id: 4, name: "Footwear", description: "Handcrafted shoes and boots" },
+   715	                { id: 5, name: "Jewelry", description: "Fine jewelry and precious accessories" }
+   716	            ];
+   717	        }
+   718	
+   719	        // セクション表示制御
+   720	        function showSection(sectionName) {
+   721	            // 全セクションを非表示
+   722	            document.querySelectorAll('.section-content').forEach(section => {
+   723	                section.classList.add('hidden');
+   724	            });
+   725	            
+   726	            // 指定されたセクションを表示
+   727	            const targetSection = document.getElementById(sectionName + 'Section');
+   728	            if (targetSection) {
+   729	                targetSection.classList.remove('hidden');
+   730	            } else {
+   731	                document.getElementById('homeSection').classList.remove('hidden');
+   732	            }
+   733	            
+   734	            // 商品一覧セクションの場合、商品を読み込み
+   735	            if (sectionName === 'collection') {
+   736	                loadAllProducts();
+   737	                loadCategoryFilter();
+   738	            } else if (sectionName === 'categories') {
+   739	                loadAllCategories();
+   740	            }
+   741	        }
+   742	
+   743	        function goHome() {
+   744	            showSection('home');
+   745	        }
+   746	
+   747	        // 商品表示関数
+   748	        function loadFeaturedProducts() {
+   749	            const featuredProducts = products.filter(p => p.is_featured && p.is_active);
+   750	            const container = document.getElementById('featuredProducts');
+   751	            
+   752	            container.innerHTML = featuredProducts.map(product => createProductCard(product)).join('');
+   753	        }
+   754	
+   755	        function loadAllProducts() {
+   756	            const container = document.getElementById('productsContainer');
+   757	            const activeProducts = products.filter(p => p.is_active);
+   758	            
+   759	            container.innerHTML = activeProducts.slice(0, productsPerPage * currentPage)
+   760	                .map(product => createProductCard(product)).join('');
+   761	            
+   762	            // Load More ボタンの表示制御
+   763	            const loadMoreBtn = document.getElementById('loadMoreBtn');
+   764	            if (activeProducts.length > productsPerPage * currentPage) {
+   765	                loadMoreBtn.style.display = 'block';
+   766	            } else {
+   767	                loadMoreBtn.style.display = 'none';
+   768	            }
+   769	        }
+   770	
+   771	        function createProductCard(product) {
+   772	            return `
+   773	                <div class="group relative ${isEditMode ? 'edit-mode-product' : ''}" data-product-id="${product.id}">
+   774	                    ${isEditMode ? `
+   775	                        <div class="absolute top-2 right-2 z-10 flex space-x-1">
+   776	                            <button onclick="editProduct(${product.id})" class="bg-admin-blue text-white p-2 rounded-full opacity-90 hover:opacity-100">
+   777	                                <i class="fas fa-edit text-xs"></i>
+   778	                            </button>
+   779	                            <button onclick="deleteProductConfirm(${product.id})" class="bg-red-600 text-white p-2 rounded-full opacity-90 hover:opacity-100">
+   780	                                <i class="fas fa-trash text-xs"></i>
+   781	                            </button>
+   782	                        </div>
+   783	                    ` : ''}
+   784	                    <div class="aspect-[4/5] bg-gray-100 rounded-lg overflow-hidden group-hover:opacity-75 transition-opacity cursor-pointer" onclick="viewProduct(${product.id})">
+   785	                        <img src="${product.image_url}" alt="${product.name}" class="w-full h-full object-cover">
+   786	                    </div>
+   787	                    <div class="mt-4">
+   788	                        <h3 class="text-sm font-medium text-loewe-black cursor-pointer hover:text-loewe-brown transition-colors" onclick="viewProduct(${product.id})">${product.name}</h3>
+   789	                        <p class="text-sm text-loewe-gray mt-1">${product.category_name}</p>
+   790	                        <p class="text-lg font-medium text-loewe-black mt-2">¥${product.price.toLocaleString()}</p>
+   791	                        ${product.stock <= 5 ? `<p class="text-xs text-red-600 mt-1">Only ${product.stock} left</p>` : ''}
+   792	                        <button onclick="addToCart(${product.id})" class="mt-3 w-full border border-loewe-black text-loewe-black py-2 text-sm hover:bg-loewe-black hover:text-white transition-all ${product.stock === 0 ? 'opacity-50 cursor-not-allowed' : ''}" ${product.stock === 0 ? 'disabled' : ''}>
+   793	                            ${product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+   794	                        </button>
+   795	                    </div>
+   796	                </div>
+   797	            `;
+   798	        }
+   799	
+   800	        // カテゴリ表示
+   801	        function loadCategories() {
+   802	            const container = document.getElementById('categoriesContainer');
+   803	            
+   804	            container.innerHTML = categories.slice(0, 5).map(category => `
+   805	                <div class="text-center cursor-pointer group" onclick="filterByCategory(${category.id})">
+   806	                    <div class="w-full h-32 bg-gray-200 rounded-lg mb-4 group-hover:bg-gray-300 transition-colors"></div>
+   807	                    <h4 class="text-sm font-medium text-loewe-black group-hover:text-loewe-brown transition-colors">${category.name}</h4>
+   808	                </div>
+   809	            `).join('');
+   810	        }
+   811	
+   812	        function loadAllCategories() {
+   813	            const container = document.getElementById('allCategoriesContainer');
+   814	            
+   815	            container.innerHTML = categories.map(category => {
+   816	                const categoryProducts = products.filter(p => p.category_id === category.id && p.is_active);
+   817	                return `
+   818	                    <div class="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer" onclick="filterByCategory(${category.id})">
+   819	                        <h4 class="text-lg font-medium text-loewe-black mb-2">${category.name}</h4>
+   820	                        <p class="text-sm text-loewe-gray mb-4">${category.description}</p>
+   821	                        <p class="text-xs text-loewe-gray">${categoryProducts.length} products</p>
+   822	                    </div>
+   823	                `;
+   824	            }).join('');
+   825	        }
+   826	
+   827	        // 検索・フィルタリング
+   828	        function searchProducts(event) {
+   829	            if (event && event.key !== 'Enter') return;
+   830	            
+   831	            const query = document.getElementById('searchInput').value.toLowerCase();
+   832	            const filteredProducts = products.filter(p => 
+   833	                p.is_active && 
+   834	                (p.name.toLowerCase().includes(query) || 
+   835	                 p.description.toLowerCase().includes(query) ||
+   836	                 p.category_name.toLowerCase().includes(query))
+   837	            );
+   838	            
+   839	            displayProducts(filteredProducts);
+   840	        }
+   841	
+   842	        function filterByCategory(categoryId) {
+   843	            showSection('collection');
+   844	            document.getElementById('categoryFilter').value = categoryId;
+   845	            filterProducts();
+   846	        }
+   847	
+   848	        function filterProducts() {
+   849	            const categoryId = document.getElementById('categoryFilter').value;
+   850	            const priceRange = document.getElementById('priceFilter').value;
+   851	            
+   852	            let filteredProducts = products.filter(p => p.is_active);
+   853	            
+   854	            if (categoryId) {
+   855	                filteredProducts = filteredProducts.filter(p => p.category_id == categoryId);
+   856	            }
+   857	            
+   858	            if (priceRange) {
+   859	                const [min, max] = priceRange.split('-');
+   860	                if (max === undefined) {
+   861	                    filteredProducts = filteredProducts.filter(p => p.price >= parseInt(min));
+   862	                } else {
+   863	                    filteredProducts = filteredProducts.filter(p => p.price >= parseInt(min) && p.price <= parseInt(max));
+   864	                }
+   865	            }
+   866	            
+   867	            displayProducts(filteredProducts);
+   868	        }
+   869	
+   870	        function sortProducts() {
+   871	            const sortBy = document.getElementById('sortSelect').value;
+   872	            let sortedProducts = [...products.filter(p => p.is_active)];
+   873	            
+   874	            switch(sortBy) {
+   875	                case 'price_asc':
+   876	                    sortedProducts.sort((a, b) => a.price - b.price);
+   877	                    break;
+   878	                case 'price_desc':
+   879	                    sortedProducts.sort((a, b) => b.price - a.price);
+   880	                    break;
+   881	                case 'name':
+   882	                    sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
+   883	                    break;
+   884	                case 'featured':
+   885	                    sortedProducts.sort((a, b) => b.is_featured - a.is_featured);
+   886	                    break;
+   887	                case 'newest':
+   888	                default:
+   889	                    sortedProducts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+   890	                    break;
+   891	            }
+   892	            
+   893	            displayProducts(sortedProducts);
+   894	        }
+   895	
+   896	        function displayProducts(productList) {
+   897	            const container = document.getElementById('productsContainer');
+   898	            container.innerHTML = productList.slice(0, productsPerPage * currentPage)
+   899	                .map(product => createProductCard(product)).join('');
+   900	        }
+   901	
+   902	        function loadCategoryFilter() {
+   903	            const select = document.getElementById('categoryFilter');
+   904	            select.innerHTML = '<option value="">All Categories</option>' +
+   905	                categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('');
+   906	        }
+   907	
+   908	        function clearFilters() {
+   909	            document.getElementById('categoryFilter').value = '';
+   910	            document.getElementById('priceFilter').value = '';
+   911	            document.getElementById('searchInput').value = '';
+   912	            loadAllProducts();
+   913	        }
+   914	
+   915	        // ショッピングカート機能
+   916	        function addToCart(productId) {
+   917	            const product = products.find(p => p.id === productId);
+   918	            if (!product || product.stock === 0) return;
+   919	            
+   920	            const existingItem = cart.find(item => item.id === productId);
+   921	            
+   922	            if (existingItem) {
+   923	                if (existingItem.quantity < product.stock) {
+   924	                    existingItem.quantity++;
+   925	                } else {
+   926	                    alert('在庫が不足しています');
+   927	                    return;
+   928	                }
+   929	            } else {
+   930	                cart.push({
+   931	                    ...product,
+   932	                    quantity: 1
+   933	                });
+   934	            }
+   935	            
+   936	            saveCartToStorage();
+   937	            updateCartUI();
+   938	            
+   939	            // 追加アニメーション
+   940	            showNotification(`${product.name} をカートに追加しました`);
+   941	        }
+   942	
+   943	        function removeFromCart(productId) {
+   944	            cart = cart.filter(item => item.id !== productId);
+   945	            saveCartToStorage();
+   946	            updateCartUI();
+   947	            updateCartDisplay();
+   948	        }
+   949	
+   950	        function updateCartQuantity(productId, quantity) {
+   951	            const item = cart.find(item => item.id === productId);
+   952	            if (item) {
+   953	                const product = products.find(p => p.id === productId);
+   954	                if (quantity <= 0) {
+   955	                    removeFromCart(productId);
+   956	                } else if (quantity <= product.stock) {
+   957	                    item.quantity = quantity;
+   958	                    saveCartToStorage();
+   959	                    updateCartUI();
+   960	                    updateCartDisplay();
+   961	                } else {
+   962	                    alert('在庫が不足しています');
+   963	                }
+   964	            }
+   965	        }
+   966	
+   967	        function clearCart() {
+   968	            cart = [];
+   969	            saveCartToStorage();
+   970	            updateCartUI();
+   971	            updateCartDisplay();
+   972	        }
+   973	
+   974	        function updateCartUI() {
+   975	            const cartCount = document.getElementById('cartCount');
+   976	            const cartTotal = document.getElementById('cartTotal');
+   977	            const checkoutBtn = document.getElementById('checkoutBtn');
+   978	            
+   979	            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+   980	            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+   981	            
+   982	            if (totalItems > 0) {
+   983	                cartCount.textContent = totalItems;
+   984	                cartCount.classList.remove('hidden');
+   985	            } else {
+   986	                cartCount.classList.add('hidden');
+   987	            }
+   988	            
+   989	            if (cartTotal) {
+   990	                cartTotal.textContent = `¥${totalPrice.toLocaleString()}`;
+   991	            }
+   992	            
+   993	            if (checkoutBtn) {
+   994	                checkoutBtn.disabled = cart.length === 0;
+   995	            }
+   996	        }
+   997	
+   998	        function updateCartDisplay() {
+   999	            const container = document.getElementById('cartItems');
+  1000	            
+  1001	            if (cart.length === 0) {
+  1002	                container.innerHTML = `
+  1003	                    <div class="text-center py-12">
+  1004	                        <i class="fas fa-shopping-bag text-4xl text-gray-300 mb-4"></i>
+  1005	                        <p class="text-gray-500">Your cart is empty</p>
+  1006	                        <button onclick="closeCart(); showSection('collection')" class="mt-4 text-loewe-black hover:text-loewe-brown text-sm">
+  1007	                            Continue Shopping
+  1008	                        </button>
+  1009	                    </div>
+  1010	                `;
+  1011	                return;
+  1012	            }
+  1013	            
+  1014	            container.innerHTML = cart.map(item => `
+  1015	                <div class="flex items-center space-x-4 py-4 border-b border-gray-200">
+  1016	                    <img src="${item.image_url}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
+  1017	                    <div class="flex-1">
+  1018	                        <h4 class="text-sm font-medium text-gray-900">${item.name}</h4>
+  1019	                        <p class="text-sm text-gray-500">¥${item.price.toLocaleString()}</p>
+  1020	                        <div class="flex items-center mt-2">
+  1021	                            <button onclick="updateCartQuantity(${item.id}, ${item.quantity - 1})" class="text-gray-400 hover:text-gray-600">
+  1022	                                <i class="fas fa-minus text-xs"></i>
+  1023	                            </button>
+  1024	                            <span class="mx-3 text-sm">${item.quantity}</span>
+  1025	                            <button onclick="updateCartQuantity(${item.id}, ${item.quantity + 1})" class="text-gray-400 hover:text-gray-600">
+  1026	                                <i class="fas fa-plus text-xs"></i>
+  1027	                            </button>
+  1028	                        </div>
+  1029	                    </div>
+  1030	                    <div class="text-right">
+  1031	                        <p class="text-sm font-medium">¥${(item.price * item.quantity).toLocaleString()}</p>
+  1032	                        <button onclick="removeFromCart(${item.id})" class="text-red-400 hover:text-red-600 text-xs mt-1">
+  1033	                            <i class="fas fa-trash"></i>
+  1034	                        </button>
+  1035	                    </div>
+  1036	                </div>
+  1037	            `).join('');
+  1038	        }
+  1039	
+  1040	        function openCart() {
+  1041	            updateCartDisplay();
+  1042	            document.getElementById('cartSidebar').classList.remove('translate-x-full');
+  1043	            document.getElementById('cartOverlay').classList.remove('hidden');
+  1044	        }
+  1045	
+  1046	        function closeCart() {
+  1047	            document.getElementById('cartSidebar').classList.add('translate-x-full');
+  1048	            document.getElementById('cartOverlay').classList.add('hidden');
+  1049	        }
+  1050	
+  1051	        // ストレージ機能
+  1052	        function saveCartToStorage() {
+  1053	            localStorage.setItem('lovequeenCart', JSON.stringify(cart));
+  1054	        }
+  1055	
+  1056	        function loadCartFromStorage() {
+  1057	            const savedCart = localStorage.getItem('lovequeenCart');
+  1058	            if (savedCart) {
+  1059	                cart = JSON.parse(savedCart);
+  1060	            }
+  1061	        }
+  1062	
+  1063	        // 管理機能
+  1064	        function toggleEditMode() {
+  1065	            isEditMode = !isEditMode;
+  1066	            const btn = document.getElementById('editModeBtn');
+  1067	            const fab = document.getElementById('addProductFab');
+  1068	            const editControls = document.querySelectorAll('.edit-controls');
+  1069	            
+  1070	            if (isEditMode) {
+  1071	                btn.innerHTML = '<i class="fas fa-edit mr-1"></i>編集モード: ON';
+  1072	                fab.classList.remove('hidden');
+  1073	                editControls.forEach(control => control.classList.remove('hidden'));
+  1074	                document.body.classList.add('edit-mode');
+  1075	            } else {
+  1076	                btn.innerHTML = '<i class="fas fa-edit mr-1"></i>編集モード: OFF';
+  1077	                fab.classList.add('hidden');
+  1078	                editControls.forEach(control => control.classList.add('hidden'));
+  1079	                document.body.classList.remove('edit-mode');
+  1080	            }
+  1081	            
+  1082	            // 商品カードを再描画
+  1083	            if (document.getElementById('collectionSection').classList.contains('section-content') && 
+  1084	                !document.getElementById('collectionSection').classList.contains('hidden')) {
+  1085	                loadAllProducts();
+  1086	            }
+  1087	            loadFeaturedProducts();
+  1088	        }
+  1089	
+  1090	        // 管理者パネル
+  1091	        function showAdminPanel() {
+  1092	            document.getElementById('adminPanel').classList.remove('hidden');
+  1093	            loadAdminData();
+  1094	        }
+  1095	
+  1096	        function closeAdminPanel() {
+  1097	            document.getElementById('adminPanel').classList.add('hidden');
+  1098	        }
+  1099	
+  1100	        function showAdminTab(tabName) {
+  1101	            // タブボタンの状態更新
+  1102	            document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+  1103	                btn.classList.remove('active');
+  1104	            });
+  1105	            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+  1106	            
+  1107	            // タブコンテンツの表示切り替え
+  1108	            document.querySelectorAll('.admin-tab-content').forEach(content => {
+  1109	                content.classList.add('hidden');
+  1110	            });
+  1111	            document.getElementById(`admin${tabName.charAt(0).toUpperCase() + tabName.slice(1)}Tab`).classList.remove('hidden');
+  1112	            
+  1113	            // データ読み込み
+  1114	            if (tabName === 'products') {
+  1115	                loadAdminProducts();
+  1116	            } else if (tabName === 'analytics') {
+  1117	                loadAnalytics();
+  1118	            }
+  1119	        }
+  1120	
+  1121	        function loadAdminData() {
+  1122	            loadAdminProducts();
+  1123	            loadAnalytics();
+  1124	        }
+  1125	
+  1126	        function loadAdminProducts() {
+  1127	            const tbody = document.getElementById('adminProductsTable');
+  1128	            
+  1129	            tbody.innerHTML = products.map(product => `
+  1130	                <tr>
+  1131	                    <td class="px-6 py-4 whitespace-nowrap">
+  1132	                        <div class="flex items-center">
+  1133	                            <img class="h-10 w-10 rounded object-cover" src="${product.image_url}" alt="${product.name}">
+  1134	                            <div class="ml-4">
+  1135	                                <div class="text-sm font-medium text-gray-900">${product.name}</div>
+  1136	                                <div class="text-sm text-gray-500">${product.sku || '-'}</div>
+  1137	                            </div>
+  1138	                        </div>
+  1139	                    </td>
+  1140	                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥${product.price.toLocaleString()}</td>
+  1141	                    <td class="px-6 py-4 whitespace-nowrap">
+  1142	                        <span class="text-sm ${product.stock <= 5 ? 'text-red-600 font-medium' : 'text-gray-900'}">${product.stock}</span>
+  1143	                    </td>
+  1144	                    <td class="px-6 py-4 whitespace-nowrap">
+  1145	                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${product.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+  1146	                            ${product.is_active ? 'Published' : 'Draft'}
+  1147	                        </span>
+  1148	                        ${product.is_featured ? '<span class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Featured</span>' : ''}
+  1149	                    </td>
+  1150	                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+  1151	                        <button onclick="editProduct(${product.id})" class="text-indigo-600 hover:text-indigo-900 mr-4">Edit</button>
+  1152	                        <button onclick="deleteProductConfirm(${product.id})" class="text-red-600 hover:text-red-900">Delete</button>
+  1153	                    </td>
+  1154	                </tr>
+  1155	            `).join('');
+  1156	        }
+  1157	
+  1158	        function loadAnalytics() {
+  1159	            // 模擬分析データ
+  1160	            const totalSales = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  1161	            const totalOrders = Math.floor(Math.random() * 150) + 50;
+  1162	            const totalCustomers = Math.floor(Math.random() * 80) + 20;
+  1163	            
+  1164	            document.getElementById('totalSales').textContent = `¥${totalSales.toLocaleString()}`;
+  1165	            document.getElementById('totalOrders').textContent = totalOrders;
+  1166	            document.getElementById('totalProducts').textContent = products.length;
+  1167	            document.getElementById('totalCustomers').textContent = totalCustomers;
+  1168	        }
+  1169	
+  1170	        // 商品編集
+  1171	        function openProductModal(productId = null) {
+  1172	            const modal = document.getElementById('productModal');
+  1173	            const title = document.getElementById('productModalTitle');
+  1174	            const form = document.getElementById('productForm');
+  1175	            const deleteBtn = document.getElementById('deleteProductBtn');
+  1176	            
+  1177	            form.reset();
+  1178	            
+  1179	            if (productId) {
+  1180	                const product = products.find(p => p.id === productId);
+  1181	                if (product) {
+  1182	                    title.textContent = 'Edit Product';
+  1183	                    deleteBtn.classList.remove('hidden');
+  1184	                    
+  1185	                    // フォームにデータを設定
+  1186	                    document.getElementById('productName').value = product.name;
+  1187	                    document.getElementById('productPrice').value = product.price;
+  1188	                    document.getElementById('productCategory').value = product.category_id;
+  1189	                    document.getElementById('productDescription').value = product.description || '';
+  1190	                    document.getElementById('productSku').value = product.sku || '';
+  1191	                    document.getElementById('productStock').value = product.stock;
+  1192	                    document.getElementById('productWeight').value = product.weight || '';
+  1193	                    document.getElementById('productFeatured').checked = product.is_featured;
+  1194	                    document.getElementById('productActive').checked = product.is_active;
+  1195	                }
+  1196	            } else {
+  1197	                title.textContent = 'Add New Product';
+  1198	                deleteBtn.classList.add('hidden');
+  1199	            }
+  1200	            
+  1201	            loadCategoriesForProductForm();
+  1202	            modal.classList.remove('hidden');
+  1203	        }
+  1204	
+  1205	        function closeProductModal() {
+  1206	            document.getElementById('productModal').classList.add('hidden');
+  1207	        }
+  1208	
+  1209	        function editProduct(productId) {
+  1210	            openProductModal(productId);
+  1211	        }
+  1212	
+  1213	        function loadCategoriesForProductForm() {
+  1214	            const select = document.getElementById('productCategory');
+  1215	            select.innerHTML = '<option value="">Select Category</option>' +
+  1216	                categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('');
+  1217	        }
+  1218	
+  1219	        // 画像プレビュー
+  1220	        function previewImages(input) {
+  1221	            const container = document.getElementById('imagePreviewContainer');
+  1222	            const uploadArea = document.getElementById('imageUploadArea');
+  1223	            
+  1224	            if (input.files && input.files.length > 0) {
+  1225	                container.innerHTML = '';
+  1226	                container.classList.remove('hidden');
+  1227	                uploadArea.classList.add('hidden');
+  1228	                
+  1229	                Array.from(input.files).forEach((file, index) => {
+  1230	                    const reader = new FileReader();
+  1231	                    reader.onload = function(e) {
+  1232	                        const div = document.createElement('div');
+  1233	                        div.className = 'relative';
+  1234	                        div.innerHTML = `
+  1235	                            <img src="${e.target.result}" class="w-full h-24 object-cover rounded border">
+  1236	                            <button type="button" onclick="removeImagePreview(${index})" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">
+  1237	                                <i class="fas fa-times"></i>
+  1238	                            </button>
+  1239	                        `;
+  1240	                        container.appendChild(div);
+  1241	                    };
+  1242	                    reader.readAsDataURL(file);
+  1243	                });
+  1244	            }
+  1245	        }
+  1246	
+  1247	        // 商品フォーム送信
+  1248	        document.getElementById('productForm').addEventListener('submit', function(e) {
+  1249	            e.preventDefault();
+  1250	            saveProduct();
+  1251	        });
+  1252	
+  1253	        function saveProduct() {
+  1254	            const formData = new FormData(document.getElementById('productForm'));
+  1255	            const productData = {
+  1256	                name: formData.get('name'),
+  1257	                price: parseInt(formData.get('price')),
+  1258	                category_id: parseInt(formData.get('category_id')),
+  1259	                description: formData.get('description'),
+  1260	                sku: formData.get('sku'),
+  1261	                stock: parseInt(formData.get('stock')),
+  1262	                weight: formData.get('weight') ? parseInt(formData.get('weight')) : null,
+  1263	                is_featured: formData.get('is_featured') ? true : false,
+  1264	                is_active: formData.get('is_active') ? true : false,
+  1265	                image_url: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop', // デフォルト画像
+  1266	                category_name: categories.find(c => c.id === parseInt(formData.get('category_id')))?.name || '',
+  1267	                created_at: new Date().toISOString()
+  1268	            };
+  1269	            
+  1270	            // 編集か新規作成かを判断
+  1271	            const title = document.getElementById('productModalTitle').textContent;
+  1272	            if (title === 'Edit Product') {
+  1273	                // 編集の場合、既存商品を更新
+  1274	                const existingProductIndex = products.findIndex(p => p.name === productData.name);
+  1275	                if (existingProductIndex !== -1) {
+  1276	                    productData.id = products[existingProductIndex].id;
+  1277	                    products[existingProductIndex] = productData;
+  1278	                }
+  1279	            } else {
+  1280	                // 新規作成の場合
+  1281	                productData.id = Math.max(...products.map(p => p.id)) + 1;
+  1282	                products.push(productData);
+  1283	            }
+  1284	            
+  1285	            closeProductModal();
+  1286	            loadFeaturedProducts();
+  1287	            if (!document.getElementById('collectionSection').classList.contains('hidden')) {
+  1288	                loadAllProducts();
+  1289	            }
+  1290	            loadAdminProducts();
+  1291	            
+  1292	            showNotification('商品が保存されました');
+  1293	        }
+  1294	
+  1295	        function deleteProductConfirm(productId) {
+  1296	            if (confirm('この商品を削除してもよろしいですか？')) {
+  1297	                deleteProduct(productId);
+  1298	            }
+  1299	        }
+  1300	
+  1301	        function deleteProduct(productId) {
+  1302	            products = products.filter(p => p.id !== productId);
+  1303	            
+  1304	            closeProductModal();
+  1305	            loadFeaturedProducts();
+  1306	            if (!document.getElementById('collectionSection').classList.contains('hidden')) {
+  1307	                loadAllProducts();
+  1308	            }
+  1309	            loadAdminProducts();
+  1310	            
+  1311	            showNotification('商品が削除されました');
+  1312	        }
+  1313	
+  1314	        // 認証機能（簡易版）
+  1315	        function checkUserSession() {
+  1316	            const savedUser = localStorage.getItem('lovequeenUser');
+  1317	            if (savedUser) {
+  1318	                currentUser = JSON.parse(savedUser);
+  1319	                updateAuthUI();
+  1320	            }
+  1321	        }
+  1322	
+  1323	        function updateAuthUI() {
+  1324	            const authButtons = document.getElementById('authButtons');
+  1325	            const userMenu = document.getElementById('userMenu');
+  1326	            const adminToolbar = document.getElementById('adminToolbar');
+  1327	            const adminMenuItems = document.getElementById('adminMenuItems');
+  1328	            
+  1329	            if (currentUser) {
+  1330	                authButtons.classList.add('hidden');
+  1331	                userMenu.classList.remove('hidden');
+  1332	                document.getElementById('userName').textContent = currentUser.name;
+  1333	                
+  1334	                if (currentUser.is_admin) {
+  1335	                    adminToolbar.classList.remove('hidden');
+  1336	                    adminMenuItems.classList.remove('hidden');
+  1337	                }
+  1338	            } else {
+  1339	                authButtons.classList.remove('hidden');
+  1340	                userMenu.classList.add('hidden');
+  1341	                adminToolbar.classList.add('hidden');
+  1342	            }
+  1343	        }
+  1344	
+  1345	        function adminLogin() {
+  1346	            // 簡易管理者ログイン
+  1347	            currentUser = {
+  1348	                id: 1,
+  1349	                name: 'Admin',
+  1350	                email: 'admin@lovequeen.co.jp',
+  1351	                is_admin: true
+  1352	            };
+  1353	            localStorage.setItem('lovequeenUser', JSON.stringify(currentUser));
+  1354	            updateAuthUI();
+  1355	        }
+  1356	
+  1357	        function logout() {
+  1358	            currentUser = null;
+  1359	            localStorage.removeItem('lovequeenUser');
+  1360	            updateAuthUI();
+  1361	            isEditMode = false;
+  1362	            document.getElementById('editModeBtn').innerHTML = '<i class="fas fa-edit mr-1"></i>編集モード: OFF';
+  1363	            document.getElementById('addProductFab').classList.add('hidden');
+  1364	        }
+  1365	
+  1366	        function adminLogout() {
+  1367	            logout();
+  1368	        }
+  1369	
+  1370	        // その他のユーティリティ関数
+  1371	        function showNotification(message) {
+  1372	            // 簡易通知表示
+  1373	            const notification = document.createElement('div');
+  1374	            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded shadow-lg z-50';
+  1375	            notification.textContent = message;
+  1376	            document.body.appendChild(notification);
+  1377	            
+  1378	            setTimeout(() => {
+  1379	                notification.remove();
+  1380	            }, 3000);
+  1381	        }
+  1382	
+  1383	        function setupEventListeners() {
+  1384	            // ユーザーメニューの開閉
+  1385	            document.getElementById('userMenuButton').addEventListener('click', function() {
+  1386	                document.getElementById('userDropdown').classList.toggle('hidden');
+  1387	            });
+  1388	            
+  1389	            // クリック外しでメニューを閉じる
+  1390	            document.addEventListener('click', function(e) {
+  1391	                if (!e.target.closest('#userMenu')) {
+  1392	                    document.getElementById('userDropdown').classList.add('hidden');
+  1393	                }
+  1394	            });
+  1395	            
+  1396	            // 管理者ログイン（デモ用）
+  1397	            document.addEventListener('keydown', function(e) {
+  1398	                if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+  1399	                    adminLogin();
+  1400	                }
+  1401	            });
+  1402	        }
+  1403	
+  1404	        // モーダル関数（基本的なもの）
+  1405	        function openLoginModal() {
+  1406	            // ログインモーダルを開く（実装省略）
+  1407	            console.log('Login modal opened');
+  1408	        }
+  1409	
+  1410	        function openRegisterModal() {
+  1411	            // 登録モーダルを開く（実装省略）
+  1412	            console.log('Register modal opened');
+  1413	        }
+  1414	
+  1415	        function viewProduct(productId) {
+  1416	            // 商品詳細を表示（実装省略）
+  1417	            console.log('View product:', productId);
+  1418	        }
+  1419	
+  1420	        function proceedToCheckout() {
+  1421	            if (cart.length === 0) return;
+  1422	            
+  1423	            // チェックアウト処理（実装省略）
+  1424	            alert('チェックアウト機能は開発中です');
+  1425	        }
+  1426	
+  1427	        function loadMoreProducts() {
+  1428	            currentPage++;
+  1429	            loadAllProducts();
+  1430	        }
+  1431	
+  1432	        // CSS スタイル
+  1433	        const style = document.createElement('style');
+  1434	        style.textContent = `
+  1435	            .admin-tab-btn {
+  1436	                flex: 1;
+  1437	                padding: 12px 16px;
+  1438	                text-align: center;
+  1439	                font-medium: 500;
+  1440	                color: #6b7280;
+  1441	                background: transparent;
+  1442	                border: none;
+  1443	                border-radius: 8px;
+  1444	                cursor: pointer;
+  1445	                transition: all 0.2s ease;
+  1446	            }
+  1447	            
+  1448	            .admin-tab-btn:hover {
+  1449	                color: #374151;
+  1450	                background: #f9fafb;
+  1451	            }
+  1452	            
+  1453	            .admin-tab-btn.active {
+  1454	                color: white;
+  1455	                background: #3b82f6;
+  1456	            }
+  1457	            
+  1458	            .edit-mode-product {
+  1459	                position: relative;
+  1460	            }
+  1461	            
+  1462	            .edit-mode-product:hover {
+  1463	                ring: 2px;
+  1464	                ring-color: #3b82f6;
+  1465	            }
+  1466	            
+  1467	            .editable {
+  1468	                cursor: pointer;
+  1469	                border-radius: 4px;
+  1470	                transition: all 0.2s ease;
+  1471	            }
+  1472	            
+  1473	            .editable:hover {
+  1474	                background: rgba(59, 130, 246, 0.1);
+  1475	                outline: 1px solid #3b82f6;
+  1476	            }
+  1477	        `;
+  1478	        document.head.appendChild(style);
+  1479	    </script>
+  1480	</body>
+  1481	</html>
