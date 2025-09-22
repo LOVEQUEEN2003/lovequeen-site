@@ -1,1 +1,245 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoveQueen - Premium Online Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'loewe': ['Helvetica Neue', 'Arial', 'sans-serif']
+                    },
+                    colors: {
+                        'loewe-beige': '#f5f4f2',
+                        'loewe-brown': '#8b7355',
+                        'loewe-black': '#1a1a1a',
+                        'loewe-gray': '#666666',
+                        'admin-blue': '#3b82f6'
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-loewe-beige font-loewe">
+    <!-- 管理者ツールバー（ログイン時のみ表示） -->
+    <div id="adminToolbar" class="hidden bg-admin-blue text-white py-2">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <i class="fas fa-tools"></i>
+                <span class="text-sm">管理者モード</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button onclick="showAdminPanel()" class="text-sm hover:underline">
+                    <i class="fas fa-cog mr-1"></i>管理画面
+                </button>
+                <button onclick="toggleEditMode()" id="editModeBtn" class="text-sm hover:underline">
+                    <i class="fas fa-edit mr-1"></i>編集モード: OFF
+                </button>
+                <button onclick="adminLogout()" class="text-sm hover:underline">
+                    <i class="fas fa-sign-out-alt mr-1"></i>ログアウト
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- メインヘッダー -->
+    <header class="bg-white border-b border-gray-200 relative">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center">
+                    <h1 class="text-3xl font-light tracking-wider text-loewe-black uppercase cursor-pointer" onclick="goHome()">
+                        <span id="siteName" class="editable" data-field="siteName">LoveQueen</span>
+                    </h1>
+                </div>
+                <nav class="hidden md:flex space-x-12">
+                    <a href="#" onclick="showSection('collection')" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">Collection</a>
+                    <a href="#" onclick="showSection('categories')" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">Categories</a>
+                    <a href="#" onclick="showSection('about')" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">About</a>
+                    <a href="#" onclick="showSection('contact')" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">Contact</a>
+                </nav>
+                <div class="flex items-center space-x-8">
+                    <button id="cartButton" onclick="openCart()" class="relative text-loewe-gray hover:text-loewe-black transition-colors">
+                        <i class="fas fa-shopping-bag text-lg"></i>
+                        <span id="cartCount" class="absolute -top-1 -right-1 bg-loewe-brown text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hidden">0</span>
+                    </button>
+                    <div id="authButtons" class="flex space-x-6">
+                        <button id="loginButton" onclick="openLoginModal()" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">
+                            Sign In
+                        </button>
+                        <button id="registerButton" onclick="openRegisterModal()" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">
+                            Register
+                        </button>
+                    </div>
+                    <div id="userMenu" class="hidden relative">
+                        <button id="userMenuButton" class="flex items-center text-loewe-gray hover:text-loewe-black transition-colors">
+                            <i class="fas fa-user mr-2"></i>
+                            <span id="userName" class="text-sm uppercase tracking-wide">Account</span>
+                            <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                        </button>
+                        <div id="userDropdown" class="hidden absolute right-0 mt-3 w-48 bg-white border border-gray-200 shadow-lg z-50 rounded-md">
+                            <div class="py-2">
+                                <a href="#" onclick="showProfile()" class="block px-4 py-3 text-xs text-loewe-gray hover:text-loewe-black hover:bg-gray-50 uppercase tracking-wide">
+                                    Profile
+                                </a>
+                                <a href="#" onclick="showOrders()" class="block px-4 py-3 text-xs text-loewe-gray hover:text-loewe-black hover:bg-gray-50 uppercase tracking-wide">
+                                    Orders
+                                </a>
+                                <div id="adminMenuItems" class="hidden">
+                                    <hr class="border-gray-100">
+                                    <a href="#" onclick="showAdminPanel()" class="block px-4 py-3 text-xs text-blue-600 hover:text-blue-800 hover:bg-blue-50 uppercase tracking-wide">
+                                        <i class="fas fa-cog mr-2"></i>Admin Panel
+                                    </a>
+                                </div>
+                                <hr class="border-gray-100">
+                                <a href="#" onclick="logout()" class="block px-4 py-3 text-xs text-loewe-gray hover:text-loewe-black hover:bg-gray-50 uppercase tracking-wide">
+                                    Sign Out
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 編集モード用の商品追加ボタン -->
+        <div id="addProductFab" class="hidden fixed bottom-6 right-6 z-50">
+            <button onclick="openProductModal()" class="bg-admin-blue text-white rounded-full w-14 h-14 shadow-lg hover:bg-blue-600 transition-colors">
+                <i class="fas fa-plus text-xl"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="max-w-6xl mx-auto px-6">
+        <!-- ホームセクション -->
+        <section id="homeSection" class="section-content">
+            <!-- ヒーローセクション -->
+            <div class="py-20 text-center border-b border-gray-200 relative">
+                <div class="max-w-2xl mx-auto">
+                    <h2 class="text-6xl font-light text-loewe-black mb-8 tracking-wider uppercase">
+                        <span id="heroTitle" class="editable" data-field="heroTitle">Autumn<br>Collection</span>
+                    </h2>
+                    <p class="text-lg text-loewe-gray mb-12 leading-relaxed">
+                        <span id="heroDescription" class="editable" data-field="heroDescription">
+                            Discover our carefully curated selection of premium goods,<br>
+                            crafted with exceptional attention to detail.
+                        </span>
+                    </p>
+                    <button onclick="showSection('collection')" class="border border-loewe-black text-loewe-black px-8 py-4 text-sm uppercase tracking-wider hover:bg-loewe-black hover:text-white transition-all duration-300">
+                        <span id="heroButton" class="editable" data-field="heroButton">Explore Collection</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 人気商品セクション -->
+            <div class="py-16 relative">
+                <h3 class="text-2xl font-light text-loewe-black mb-12 text-center uppercase tracking-wider">
+                    <span id="featuredTitle" class="editable" data-field="featuredTitle">Featured Products</span>
+                </h3>
+                <div id="featuredProducts" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                    <!-- 人気商品がここに動的に表示されます -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ショッピングカートサイドバー -->
+    <div id="cartSidebar" class="fixed inset-y-0 right-0 w-96 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out z-50">
+        <div class="flex flex-col h-full">
+            <div class="flex items-center justify-between p-6 border-b">
+                <h3 class="text-lg font-medium">Shopping Cart</h3>
+                <button onclick="closeCart()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div id="cartItems" class="flex-1 overflow-y-auto p-6">
+                <!-- カート商品がここに表示 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // 初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFeaturedProducts();
+            setupEventListeners();
+        });
+
+        // サンプル商品データ
+        const products = [
+            {
+                id: 1,
+                name: "Premium Leather Handbag",
+                price: 45800,
+                image_url: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop",
+                is_featured: true
+            },
+            {
+                id: 2,
+                name: "Cashmere Wool Coat",
+                price: 89000,
+                image_url: "https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=400&h=400&fit=crop",
+                is_featured: true
+            },
+            {
+                id: 3,
+                name: "Silk Scarf Collection",
+                price: 18500,
+                image_url: "https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=400&h=400&fit=crop",
+                is_featured: true
+            }
+        ];
+
+        function loadFeaturedProducts() {
+            const container = document.getElementById('featuredProducts');
+            const featuredProducts = products.filter(p => p.is_featured);
+            
+            container.innerHTML = featuredProducts.map(product => `
+                <div class="group relative">
+                    <div class="aspect-[4/5] bg-gray-100 rounded-lg overflow-hidden group-hover:opacity-75 transition-opacity">
+                        <img src="${product.image_url}" alt="${product.name}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="mt-4">
+                        <h3 class="text-sm font-medium text-loewe-black">${product.name}</h3>
+                        <p class="text-lg font-medium text-loewe-black mt-2">¥${product.price.toLocaleString()}</p>
+                        <button onclick="alert('カート機能は開発中です')" class="mt-3 w-full border border-loewe-black text-loewe-black py-2 text-sm hover:bg-loewe-black hover:text-white transition-all">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openCart() {
+            document.getElementById('cartSidebar').classList.remove('translate-x-full');
+        }
+
+        function closeCart() {
+            document.getElementById('cartSidebar').classList.add('translate-x-full');
+        }
+
+        function setupEventListeners() {
+            console.log('🎉 新しいShopifyレベルECサイトが読み込まれました！');
+        }
+
+        function showSection(section) {
+            alert(`${section}セクションは開発中です`);
+        }
+
+        function openLoginModal() {
+            alert('ログイン機能は開発中です');
+        }
+
+        function openRegisterModal() {
+            alert('登録機能は開発中です');
+        }
+    </script>
+</body>
+</html>
 
