@@ -1,246 +1,138 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>LOVEQUEEN — 上品×可愛い、大人のためのスカートブランド</title>
-  <meta name="description" content="LOVEQUEENは上品さと可愛らしさを融合したスカートブランド。日常にラグジュアリーなひとときを。" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#0e0f12;
-      --panel:#14161a;
-      --card:#191c21;
-      --border: #232731;
-      --muted:#9aa3af;
-      --text:#e7eaef;
-      --accent:#e3c4ff;   /* 薄いラベンダー */
-      --brand:#a46bff;    /* メインカラー */
-      --brand-2:#ff6ea6;  /* サブ差し色 */
-      --shadow: 0 20px 40px rgba(0,0,0,.35);
-      --radius: 16px;
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Sans JP",system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;letter-spacing:.02em}
-    img{max-width:100%;height:auto;display:block}
-    a{color:inherit;text-decoration:none}
-    .container{max-width:1200px;margin-inline:auto;padding:24px}
-    .nav{
-      position:sticky;top:0;z-index:30;
-      backdrop-filter:saturate(140%) blur(10px);
-      background:color-mix(in srgb, var(--bg) 85%, transparent);
-      border-bottom:1px solid var(--border);
-    }
-    .nav .inner{display:flex;align-items:center;gap:20px;justify-content:space-between}
-    .logo{font-family:"Marcellus",serif;font-size:22px;letter-spacing:.18em}
-    .pill{display:inline-flex;gap:10px;padding:10px 16px;border:1px solid var(--border);border-radius:999px;align-items:center}
-    .nav a.link{opacity:.85;padding:10px 12px;border-radius:12px}
-    .nav a.link:hover{background:var(--panel)}
-    .cta{padding:10px 16px;border-radius:12px;background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#0b0c10;font-weight:700}
-    /* Hero */
-    .hero{position:relative;overflow:hidden}
-    .hero .wrap{
-      display:grid;grid-template-columns:1.2fr .8fr;gap:36px;align-items:center
-    }
-    .badge{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:12px}
-    h1{font-family:"Marcellus",serif;line-height:1.1;margin:14px 0 14px;font-size:48px;letter-spacing:.04em}
-    .lead{color:var(--muted);font-size:16px}
-    .hero .actions{display:flex;gap:14px;margin-top:18px}
-    .ghost{padding:10px 16px;border-radius:12px;border:1px solid var(--border)}
-    .glass{
-      border:1px solid color-mix(in srgb,var(--accent) 22%, transparent);
-      background:linear-gradient(180deg,rgba(228,196,255,.10),rgba(228,196,255,.03));
-      box-shadow:var(--shadow)
-    }
-    .hero .cover{
-      position:relative;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)
-    }
-    .hero .cover img{aspect-ratio:4/5;object-fit:cover}
-    .chip{
-      position:absolute;bottom:12px;left:12px;padding:6px 10px;border-radius:999px;
-      font-size:12px;background:rgba(10,11,14,.6);border:1px solid var(--border)
-    }
-    /* Section head */
-    .section-head{display:flex;align-items:end;justify-content:space-between;margin:36px 0 16px}
-    .section-head h2{font-family:"Marcellus",serif;margin:0;font-size:26px}
-    .see-all{color:var(--accent)}
-    /* Grid */
-    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
-    .card{
-      background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;
-      transition:transform .2s ease, box-shadow .2s ease
-    }
-    .card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
-    .card .img img{aspect-ratio:4/5;object-fit:cover}
-    .card .body{padding:14px}
-    .title{font-weight:600}
-    .price{color:var(--muted);font-size:14px;margin-top:6px}
-    /* Banner */
-    .banner{
-      margin-top:36px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);
-      background:linear-gradient(135deg, rgba(164,107,255,.18), rgba(255,110,166,.18));
-      display:grid;grid-template-columns:1.1fr .9fr;gap:10px;align-items:center
-    }
-    .banner .copy{padding:26px}
-    .banner h3{font-family:"Marcellus",serif;margin:0 0 10px;font-size:28px}
-    .banner p{color:var(--muted);margin:0 0 16px}
-    .banner .ill img{aspect-ratio:16/10;object-fit:cover;mix-blend:screen;opacity:.9}
-    /* Footer */
-    footer{margin-top:48px;border-top:1px solid var(--border);padding:22px 0;color:var(--muted);font-size:13px}
-    .foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
-    .foot a{color:var(--muted)}
-    /* Responsive */
-    @media (max-width:1024px){
-      .hero .wrap{grid-template-columns:1fr;gap:20px}
-      .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .banner{grid-template-columns:1fr}
-    }
-    @media (max-width:560px){
-      .nav .inner{flex-wrap:wrap;gap:12px}
-      h1{font-size:34px}
-      .grid{grid-template-columns:1fr}
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoveQueen - プレミアムオンラインショップ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'loewe': ['Helvetica Neue', 'Arial', 'sans-serif']
+                    },
+                    colors: {
+                        'loewe-beige': '#f5f4f2',
+                        'loewe-brown': '#8b7355',
+                        'loewe-black': '#1a1a1a',
+                        'loewe-gray': '#666666'
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="webapp/public/styles.css" rel="stylesheet">
 </head>
-<body>
-  <!-- ===== Nav ===== -->
-  <header class="nav">
-    <div class="container inner">
-      <div class="pill glass" style="gap:12px">
-        <span class="logo">LOVEQUEEN</span>
-        <span style="color:var(--muted);font-size:12px">EST. 2025</span>
-      </div>
-      <nav style="display:flex;gap:6px">
-        <a class="link" href="#new">新作</a>
-        <a class="link" href="#collections">コレクション</a>
-        <a class="link" href="#about">ブランド</a>
-        <a class="cta" href="#shop">オンラインストアへ</a>
-      </nav>
-    </div>
-  </header>
-
-  <!-- ===== Hero ===== -->
-  <section class="hero container" id="top">
-    <div class="wrap">
-      <div>
-        <span class="badge">上品 × 可愛い ・ プレミアムスカート</span>
-        <h1>すべての女性が<br>お姫様に。</h1>
-        <p class="lead">
-          LOVEQUEENは、シルエットの美しさと素材の上質感にこだわったスカートブランド。<br>
-          日常にラグジュアリーを添える、唯一無二の定番をあなたに。
-        </p>
-        <div class="actions">
-          <a class="cta" href="#new">新作を見る</a>
-          <a class="ghost" href="#collections">コレクション</a>
+<body class="bg-loewe-beige font-loewe">
+    <!-- ヘッダー -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center">
+                    <h1 class="text-3xl font-light tracking-wider text-loewe-black uppercase">
+                        LoveQueen
+                    </h1>
+                </div>
+                <nav class="hidden md:flex space-x-12">
+                    <a href="#" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">Collection</a>
+                    <a href="#" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">Categories</a>
+                    <a href="#" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">Contact</a>
+                </nav>
+                <div class="flex items-center space-x-8">
+                    <button id="cartButton" class="relative text-loewe-gray hover:text-loewe-black transition-colors">
+                        <i class="far fa-shopping-bag text-lg"></i>
+                        <span id="cartCount" class="absolute -top-1 -right-1 bg-loewe-brown text-white rounded-full w-4 h-4 flex items-center justify-center text-xs hidden">0</span>
+                    </button>
+                    <div id="authButtons" class="flex space-x-6">
+                        <button id="loginButton" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">
+                            Sign In
+                        </button>
+                        <button id="registerButton" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">
+                            Register
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="cover">
-        <!-- ★ ここは好みのビジュアルに差し替え可能 -->
-        <img src="https://images.unsplash.com/photo-1537832816519-689ad163238b?q=80&w=1600&auto=format&fit=crop" alt="LOVEQUEEN Visual">
-        <span class="chip">SS25 / Satin Collection</span>
-      </div>
-    </div>
-  </section>
+    </header>
 
-  <!-- ===== New Arrivals ===== -->
-  <section class="container" id="new">
-    <div class="section-head">
-      <h2>New Arrivals</h2>
-      <a class="see-all" href="#shop">もっと見る →</a>
-    </div>
-    <div class="grid">
-      <!-- 商品カード（画像URLとテキストを差し替えて使える） -->
-      <article class="card">
-        <div class="img"><img src="https://images.unsplash.com/photo-1549216963-72c1712c1196?q=80&w=1200&auto=format&fit=crop" alt="Pearl Satin Skirt"></div>
-        <div class="body">
-          <p class="title">パールサテン・マキシ</p>
-          <p class="price">¥19,800</p>
-        </div>
-      </article>
+    <!-- メインコンテンツ -->
+    <main class="max-w-6xl mx-auto px-6">
+        <!-- ヒーローセクション -->
+        <section class="py-20 text-center border-b border-gray-200">
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-6xl font-light text-loewe-black mb-8 tracking-wider uppercase">
+                    Autumn<br>Collection
+                </h2>
+                <p class="text-lg text-loewe-gray mb-12 leading-relaxed">
+                    Discover our carefully curated selection of premium goods,<br>
+                    crafted with exceptional attention to detail.
+                </p>
+                <button onclick="loadProducts()" class="border border-loewe-black text-loewe-black px-8 py-4 text-sm uppercase tracking-wider hover:bg-loewe-black hover:text-white transition-all duration-300">
+                    Explore Collection
+                </button>
+            </div>
+        </section>
 
-      <article class="card">
-        <div class="img"><img src="https://images.unsplash.com/photo-1520975867597-0f7f1a3e9b97?q=80&w=1200&auto=format&fit=crop" alt="A-line Skirt"></div>
-        <div class="body">
-          <p class="title">Aライン・ミディ</p>
-          <p class="price">¥14,300</p>
-        </div>
-      </article>
+        <!-- 商品カテゴリ -->
+        <section class="py-16 border-b border-gray-200">
+            <h3 class="text-2xl font-light text-loewe-black mb-12 text-center uppercase tracking-wider">Categories</h3>
+            <div id="categoriesContainer" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
+                <!-- カテゴリがここに動的に表示されます -->
+            </div>
+        </section>
 
-      <article class="card">
-        <div class="img"><img src="https://images.unsplash.com/photo-1520975867642-9e8b1d3b2f52?q=80&w=1200&auto=format&fit=crop" alt="Tulle Skirt"></div>
-        <div class="body">
-          <p class="title">エアリーチュール</p>
-          <p class="price">¥16,500</p>
-        </div>
-      </article>
-    </div>
-  </section>
+        <!-- 人気商品 -->
+        <section class="py-16">
+            <h3 class="text-2xl font-light text-loewe-black mb-12 text-center uppercase tracking-wider">Featured</h3>
+            <div id="featuredProducts" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                <!-- 人気商品がここに動的に表示されます -->
+            </div>
+        </section>
 
-  <!-- ===== Collections ===== -->
-  <section class="container" id="collections">
-    <div class="section-head">
-      <h2>Featured Collections</h2>
-      <a class="see-all" href="#shop">全コレクション →</a>
-    </div>
-    <div class="grid">
-      <article class="card">
-        <div class="img"><img src="https://images.unsplash.com/photo-1514986888952-8cd320577b95?q=80&w=1200&auto=format&fit=crop" alt="Satin"></div>
-        <div class="body">
-          <p class="title">Satin Series</p>
-          <p class="price">光沢と落ち感のあるラグジュアリー。</p>
-        </div>
-      </article>
-      <article class="card">
-        <div class="img"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1200&auto=format&fit=crop" alt="Tulle"></div>
-        <div class="body">
-          <p class="title">Tulle & Lace</p>
-          <p class="price">軽やかでドラマティックなボリューム。</p>
-        </div>
-      </article>
-      <article class="card">
-        <div class="img"><img src="https://images.unsplash.com/photo-1516762689617-e1cffcef479d?q=80&w=1200&auto=format&fit=crop" alt="Work"></div>
-        <div class="body">
-          <p class="title">Work Essentials</p>
-          <p class="price">オンタイムに映える上品な定番。</p>
-        </div>
-      </article>
-    </div>
+        <!-- 商品一覧 -->
+        <section id="productsSection" class="hidden py-16 border-t border-gray-200">
+            <div class="flex justify-between items-center mb-12">
+                <h3 class="text-2xl font-light text-loewe-black uppercase tracking-wider">Collection</h3>
+                <div class="flex items-center space-x-6">
+                    <select id="sortSelect" class="border border-gray-300 px-4 py-2 text-sm text-loewe-gray bg-white">
+                        <option value="created_at">Newest First</option>
+                        <option value="price_asc">Price: Low to High</option>
+                        <option value="price_desc">Price: High to Low</option>
+                        <option value="name">Alphabetical</option>
+                    </select>
+                    <input id="searchInput" type="text" placeholder="Search products..." class="border border-gray-300 px-4 py-2 text-sm text-loewe-gray bg-white w-64">
+                    <button onclick="searchProducts()" class="border border-loewe-black text-loewe-black px-4 py-2 text-sm hover:bg-loewe-black hover:text-white transition-all">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="productsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                <!-- 商品がここに動的に表示されます -->
+            </div>
+        </section>
+    </main>
 
-    <div class="banner glass">
-      <div class="copy">
-        <h3>サイズ交換・初回送料無料</h3>
-        <p>自宅で試着、サイズが合わなければ無料で交換。LINEでスタイリング相談も。</p>
-        <div class="actions">
-          <a class="cta" href="#shop">今すぐ試す</a>
-          <a class="ghost" href="#about">ブランドについて</a>
+    <!-- フッター -->
+    <footer class="bg-white border-t border-gray-200 py-16 mt-20">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+                <div class="md:col-span-2">
+                    <h3 class="text-2xl font-light text-loewe-black mb-6 uppercase tracking-wider">LoveQueen</h3>
+                    <p class="text-loewe-gray leading-relaxed mb-6">
+                        Exceptional craftsmanship meets contemporary design.<br>
+                        Discover timeless pieces that define luxury.
+                    </p>
+                    <p class="text-xs text-loewe-gray uppercase tracking-wide">© 2024 LoveQueen. All rights reserved.</p>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="ill">
-        <img src="https://images.unsplash.com/photo-1533560904424-5f9a907a9f21?q=80&w=1600&auto=format&fit=crop" alt="">
-      </div>
-    </div>
-  </section>
+    </footer>
 
-  <!-- ===== About / Footer ===== -->
-  <section class="container" id="about" style="margin-top:36px">
-    <div class="section-head"><h2>LOVEQUEENについて</h2></div>
-    <p class="lead" style="max-width:70ch">
-      私たちは「すべての女性が、お姫様に」を合言葉に、上質素材と日本人の体型に合う立体設計で、
-      毎日を特別にするスカートを作っています。少量生産・エシカル素材の採用にも取り組んでいます。
-    </p>
-  </section>
-
-  <footer>
-    <div class="container foot">
-      <span>© 2025 LOVEQUEEN Inc. All rights reserved.</span>
-      <div style="display:flex;gap:14px">
-        <a href="#">特商法</a>
-        <a href="#">プライバシー</a>
-        <a href="#contact">お問い合わせ</a>
-      </div>
-    </div>
-  </footer>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+    <script src="webapp/public/app.js"></script>
 </body>
 </html>
+
