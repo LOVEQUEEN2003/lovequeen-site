@@ -3,243 +3,427 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LoveQueen - Premium Online Shop</title>
+    <title>LOVE QUEEN - Premium Fashion Brand</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        'loewe': ['Helvetica Neue', 'Arial', 'sans-serif']
-                    },
-                    colors: {
-                        'loewe-beige': '#f5f4f2',
-                        'loewe-brown': '#8b7355',
-                        'loewe-black': '#1a1a1a',
-                        'loewe-gray': '#666666',
-                        'admin-blue': '#3b82f6'
-                    }
-                }
-            }
-        }
-    </script>
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .bg-gradient-luxury { background: linear-gradient(135deg, #f5f1eb, #e8ddd1); }
+        .text-gold { color: #d4af37; }
+        .border-gold { border-color: #d4af37; }
+        .hover-gold:hover { background-color: #d4af37; color: white; }
+        .cart-sidebar { transform: translateX(100%); transition: transform 0.3s ease; }
+        .cart-sidebar.open { transform: translateX(0); }
+        .admin-toolbar { transform: translateY(-100%); transition: transform 0.3s ease; }
+        .admin-toolbar.open { transform: translateY(0); }
+    </style>
 </head>
-<body class="bg-loewe-beige font-loewe">
-    <!-- 管理者ツールバー（ログイン時のみ表示） -->
-    <div id="adminToolbar" class="hidden bg-admin-blue text-white py-2">
-        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
-            <div class="flex items-center space-x-4">
-                <i class="fas fa-tools"></i>
-                <span class="text-sm">管理者モード</span>
+<body class="bg-gradient-luxury min-h-screen">
+    <!-- 管理者ツールバー -->
+    <div id="adminToolbar" class="admin-toolbar fixed top-0 left-0 right-0 bg-gray-800 text-white p-2 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex space-x-4">
+                <button onclick="addProduct()" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-sm">商品追加</button>
+                <button onclick="editMode()" class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">編集モード</button>
+                <button onclick="viewOrders()" class="bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded text-sm">注文管理</button>
             </div>
-            <div class="flex items-center space-x-4">
-                <button onclick="showAdminPanel()" class="text-sm hover:underline">
-                    <i class="fas fa-cog mr-1"></i>管理画面
-                </button>
-                <button onclick="toggleEditMode()" id="editModeBtn" class="text-sm hover:underline">
-                    <i class="fas fa-edit mr-1"></i>編集モード: OFF
-                </button>
-                <button onclick="adminLogout()" class="text-sm hover:underline">
-                    <i class="fas fa-sign-out-alt mr-1"></i>ログアウト
-                </button>
-            </div>
+            <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm">ログアウト</button>
         </div>
     </div>
 
-    <!-- メインヘッダー -->
-    <header class="bg-white border-b border-gray-200 relative">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex items-center">
-                    <h1 class="text-3xl font-light tracking-wider text-loewe-black uppercase cursor-pointer" onclick="goHome()">
-                        <span id="siteName" class="editable" data-field="siteName">LoveQueen</span>
-                    </h1>
+    <!-- ヘッダー -->
+    <header class="bg-white shadow-lg sticky top-0 z-40">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <h1 class="text-3xl font-bold text-gold">LOVE QUEEN</h1>
+                    <span class="text-sm text-gray-600">Premium Fashion</span>
                 </div>
-                <nav class="hidden md:flex space-x-12">
-                    <a href="#" onclick="showSection('collection')" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">Collection</a>
-                    <a href="#" onclick="showSection('categories')" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">Categories</a>
-                    <a href="#" onclick="showSection('about')" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">About</a>
-                    <a href="#" onclick="showSection('contact')" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">Contact</a>
+                
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#home" class="text-gray-700 hover:text-gold transition duration-300">ホーム</a>
+                    <a href="#collection" class="text-gray-700 hover:text-gold transition duration-300">コレクション</a>
+                    <a href="#about" class="text-gray-700 hover:text-gold transition duration-300">アバウト</a>
+                    <a href="#contact" class="text-gray-700 hover:text-gold transition duration-300">コンタクト</a>
                 </nav>
-                <div class="flex items-center space-x-8">
-                    <button id="cartButton" onclick="openCart()" class="relative text-loewe-gray hover:text-loewe-black transition-colors">
-                        <i class="fas fa-shopping-bag text-lg"></i>
-                        <span id="cartCount" class="absolute -top-1 -right-1 bg-loewe-brown text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hidden">0</span>
+                
+                <div class="flex items-center space-x-4">
+                    <button onclick="searchToggle()" class="text-gray-700 hover:text-gold transition duration-300">
+                        <i class="fas fa-search text-xl"></i>
                     </button>
-                    <div id="authButtons" class="flex space-x-6">
-                        <button id="loginButton" onclick="openLoginModal()" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">
-                            Sign In
-                        </button>
-                        <button id="registerButton" onclick="openRegisterModal()" class="text-loewe-gray hover:text-loewe-black transition-colors text-sm uppercase tracking-wide">
-                            Register
-                        </button>
-                    </div>
-                    <div id="userMenu" class="hidden relative">
-                        <button id="userMenuButton" class="flex items-center text-loewe-gray hover:text-loewe-black transition-colors">
-                            <i class="fas fa-user mr-2"></i>
-                            <span id="userName" class="text-sm uppercase tracking-wide">Account</span>
-                            <i class="fas fa-chevron-down ml-2 text-xs"></i>
-                        </button>
-                        <div id="userDropdown" class="hidden absolute right-0 mt-3 w-48 bg-white border border-gray-200 shadow-lg z-50 rounded-md">
-                            <div class="py-2">
-                                <a href="#" onclick="showProfile()" class="block px-4 py-3 text-xs text-loewe-gray hover:text-loewe-black hover:bg-gray-50 uppercase tracking-wide">
-                                    Profile
-                                </a>
-                                <a href="#" onclick="showOrders()" class="block px-4 py-3 text-xs text-loewe-gray hover:text-loewe-black hover:bg-gray-50 uppercase tracking-wide">
-                                    Orders
-                                </a>
-                                <div id="adminMenuItems" class="hidden">
-                                    <hr class="border-gray-100">
-                                    <a href="#" onclick="showAdminPanel()" class="block px-4 py-3 text-xs text-blue-600 hover:text-blue-800 hover:bg-blue-50 uppercase tracking-wide">
-                                        <i class="fas fa-cog mr-2"></i>Admin Panel
-                                    </a>
-                                </div>
-                                <hr class="border-gray-100">
-                                <a href="#" onclick="logout()" class="block px-4 py-3 text-xs text-loewe-gray hover:text-loewe-black hover:bg-gray-50 uppercase tracking-wide">
-                                    Sign Out
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    <button onclick="toggleCart()" class="relative text-gray-700 hover:text-gold transition duration-300">
+                        <i class="fas fa-shopping-bag text-xl"></i>
+                        <span id="cartCount" class="absolute -top-2 -right-2 bg-gold text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">0</span>
+                    </button>
                 </div>
             </div>
-        </div>
-        
-        <!-- 編集モード用の商品追加ボタン -->
-        <div id="addProductFab" class="hidden fixed bottom-6 right-6 z-50">
-            <button onclick="openProductModal()" class="bg-admin-blue text-white rounded-full w-14 h-14 shadow-lg hover:bg-blue-600 transition-colors">
-                <i class="fas fa-plus text-xl"></i>
-            </button>
         </div>
     </header>
 
     <!-- メインコンテンツ -->
-    <main class="max-w-6xl mx-auto px-6">
-        <!-- ホームセクション -->
-        <section id="homeSection" class="section-content">
-            <!-- ヒーローセクション -->
-            <div class="py-20 text-center border-b border-gray-200 relative">
-                <div class="max-w-2xl mx-auto">
-                    <h2 class="text-6xl font-light text-loewe-black mb-8 tracking-wider uppercase">
-                        <span id="heroTitle" class="editable" data-field="heroTitle">Autumn<br>Collection</span>
-                    </h2>
-                    <p class="text-lg text-loewe-gray mb-12 leading-relaxed">
-                        <span id="heroDescription" class="editable" data-field="heroDescription">
-                            Discover our carefully curated selection of premium goods,<br>
-                            crafted with exceptional attention to detail.
-                        </span>
-                    </p>
-                    <button onclick="showSection('collection')" class="border border-loewe-black text-loewe-black px-8 py-4 text-sm uppercase tracking-wider hover:bg-loewe-black hover:text-white transition-all duration-300">
-                        <span id="heroButton" class="editable" data-field="heroButton">Explore Collection</span>
-                    </button>
+    <main>
+        <!-- ヒーローセクション -->
+        <section id="home" class="relative h-screen flex items-center justify-center text-center">
+            <div class="absolute inset-0 bg-black opacity-20"></div>
+            <div class="relative z-10 max-w-4xl mx-auto px-4">
+                <h2 class="text-6xl font-bold text-gray-800 mb-6">LOVE QUEEN</h2>
+                <p class="text-xl text-gray-600 mb-8">贅沢なライフスタイルのための上質なファッションブランド</p>
+                <button onclick="scrollToCollection()" class="bg-gold text-white px-8 py-3 rounded-lg hover:bg-yellow-600 transition duration-300 text-lg">
+                    コレクションを見る
+                </button>
+            </div>
+        </section>
+
+        <!-- 商品コレクション -->
+        <section id="collection" class="py-20">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Autumn Collection</h2>
+                <p class="text-center text-gray-600 mb-16 max-w-2xl mx-auto">
+                    厳選された上質な商品で、特別な配慮で作り上げられたプレミアムコレクションをご覧ください。
+                </p>
+                
+                <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                    <!-- 商品がここに動的に表示されます -->
                 </div>
             </div>
+        </section>
 
-            <!-- 人気商品セクション -->
-            <div class="py-16 relative">
-                <h3 class="text-2xl font-light text-loewe-black mb-12 text-center uppercase tracking-wider">
-                    <span id="featuredTitle" class="editable" data-field="featuredTitle">Featured Products</span>
-                </h3>
-                <div id="featuredProducts" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-                    <!-- 人気商品がここに動的に表示されます -->
+        <!-- About セクション -->
+        <section id="about" class="py-20 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <div>
+                        <h2 class="text-4xl font-bold text-gray-800 mb-6">LOVE QUEENについて</h2>
+                        <p class="text-gray-600 mb-6">
+                            LOVE QUEENは、現代女性のためのラグジュアリーファッションブランドです。
+                            伝統的なクラフトマンシップと現代的なデザインを融合し、
+                            最高品質の素材のみを使用して、一点一点丁寧に作り上げています。
+                        </p>
+                        <p class="text-gray-600 mb-8">
+                            私たちは、ファッションを通じて女性の美しさと自信を引き出し、
+                            特別な瞬間をより輝かせるお手伝いをいたします。
+                        </p>
+                        <button class="bg-gold text-white px-6 py-3 rounded-lg hover:bg-yellow-600 transition duration-300">
+                            ブランドストーリー
+                        </button>
+                    </div>
+                    <div class="bg-gray-200 h-96 rounded-lg flex items-center justify-center">
+                        <span class="text-gray-500">ブランド画像</span>
+                    </div>
                 </div>
             </div>
         </section>
     </main>
 
+    <!-- フッター -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold text-gold mb-4">LOVE QUEEN</h3>
+                    <p class="text-gray-400">Premium Fashion Brand</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">ショッピング</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition duration-300">新着商品</a></li>
+                        <li><a href="#" class="hover:text-white transition duration-300">ベストセラー</a></li>
+                        <li><a href="#" class="hover:text-white transition duration-300">セール</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">カスタマーサービス</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition duration-300">お問い合わせ</a></li>
+                        <li><a href="#" class="hover:text-white transition duration-300">配送について</a></li>
+                        <li><a href="#" class="hover:text-white transition duration-300">返品・交換</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">フォローする</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-facebook text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 LOVE QUEEN. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
     <!-- ショッピングカートサイドバー -->
-    <div id="cartSidebar" class="fixed inset-y-0 right-0 w-96 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out z-50">
-        <div class="flex flex-col h-full">
-            <div class="flex items-center justify-between p-6 border-b">
-                <h3 class="text-lg font-medium">Shopping Cart</h3>
-                <button onclick="closeCart()" class="text-gray-400 hover:text-gray-600">
+    <div id="cartSidebar" class="cart-sidebar fixed top-0 right-0 w-96 h-full bg-white shadow-xl z-50 overflow-y-auto">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">ショッピングカート</h2>
+                <button onclick="toggleCart()" class="text-gray-500 hover:text-gray-700">
                     <i class="fas fa-times text-xl"></i>
                 </button>
             </div>
-            <div id="cartItems" class="flex-1 overflow-y-auto p-6">
-                <!-- カート商品がここに表示 -->
+            
+            <div id="cartItems" class="space-y-4 mb-6">
+                <!-- カート商品がここに表示されます -->
+            </div>
+            
+            <div class="border-t pt-4">
+                <div class="flex justify-between items-center text-xl font-bold mb-4">
+                    <span>合計:</span>
+                    <span id="cartTotal">¥0</span>
+                </div>
+                <button onclick="checkout()" class="w-full bg-gold text-white py-3 rounded-lg hover:bg-yellow-600 transition duration-300 text-lg">
+                    チェックアウト
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript -->
-    <script>
-        // 初期化
-        document.addEventListener('DOMContentLoaded', function() {
-            loadFeaturedProducts();
-            setupEventListeners();
-        });
+    <!-- カートオーバーレイ -->
+    <div id="cartOverlay" class="fixed inset-0 bg-black opacity-50 z-40 hidden" onclick="toggleCart()"></div>
 
-        // サンプル商品データ
+    <script>
+        // 商品データ
         const products = [
             {
                 id: 1,
-                name: "Premium Leather Handbag",
-                price: 45800,
-                image_url: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop",
-                is_featured: true
+                name: "エレガントドレス",
+                price: 48000,
+                image: "https://via.placeholder.com/400x500/f5f1eb/d4af37?text=Elegant+Dress",
+                description: "特別な夜のための上質なイブニングドレス"
             },
             {
                 id: 2,
-                name: "Cashmere Wool Coat",
+                name: "カシミアコート",
                 price: 89000,
-                image_url: "https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=400&h=400&fit=crop",
-                is_featured: true
+                image: "https://via.placeholder.com/400x500/f5f1eb/d4af37?text=Cashmere+Coat",
+                description: "最高級カシミア100%使用の冬のコート"
             },
             {
                 id: 3,
-                name: "Silk Scarf Collection",
-                price: 18500,
-                image_url: "https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=400&h=400&fit=crop",
-                is_featured: true
+                name: "シルクブラウス",
+                price: 32000,
+                image: "https://via.placeholder.com/400x500/f5f1eb/d4af37?text=Silk+Blouse",
+                description: "上品なシルク素材のブラウス"
+            },
+            {
+                id: 4,
+                name: "レザーハンドバッグ",
+                price: 65000,
+                image: "https://via.placeholder.com/400x500/f5f1eb/d4af37?text=Leather+Bag",
+                description: "イタリア製の上質なレザーバッグ"
+            },
+            {
+                id: 5,
+                name: "パールネックレス",
+                price: 125000,
+                image: "https://via.placeholder.com/400x500/f5f1eb/d4af37?text=Pearl+Necklace",
+                description: "南洋真珠を使用した高級ネックレス"
+            },
+            {
+                id: 6,
+                name: "ウールスカート",
+                price: 28000,
+                image: "https://via.placeholder.com/400x500/f5f1eb/d4af37?text=Wool+Skirt",
+                description: "上質なウール素材のエレガントスカート"
             }
         ];
 
-        function loadFeaturedProducts() {
-            const container = document.getElementById('featuredProducts');
-            const featuredProducts = products.filter(p => p.is_featured);
-            
-            container.innerHTML = featuredProducts.map(product => `
-                <div class="group relative">
-                    <div class="aspect-[4/5] bg-gray-100 rounded-lg overflow-hidden group-hover:opacity-75 transition-opacity">
-                        <img src="${product.image_url}" alt="${product.name}" class="w-full h-full object-cover">
-                    </div>
-                    <div class="mt-4">
-                        <h3 class="text-sm font-medium text-loewe-black">${product.name}</h3>
-                        <p class="text-lg font-medium text-loewe-black mt-2">¥${product.price.toLocaleString()}</p>
-                        <button onclick="alert('カート機能は開発中です')" class="mt-3 w-full border border-loewe-black text-loewe-black py-2 text-sm hover:bg-loewe-black hover:text-white transition-all">
-                            Add to Cart
-                        </button>
+        // ショッピングカート
+        let cart = JSON.parse(localStorage.getItem('lovequeenCart')) || [];
+
+        // 管理者認証状態
+        let isAdmin = false;
+
+        // ページ読み込み時の初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            renderProducts();
+            updateCartUI();
+        });
+
+        // 商品表示
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = products.map(product => `
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                    <img src="${product.image}" alt="${product.name}" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">${product.name}</h3>
+                        <p class="text-gray-600 mb-4">${product.description}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-2xl font-bold text-gold">¥${product.price.toLocaleString()}</span>
+                            <button onclick="addToCart(${product.id})" class="bg-gold text-white px-4 py-2 rounded hover:bg-yellow-600 transition duration-300">
+                                カートに追加
+                            </button>
+                        </div>
                     </div>
                 </div>
             `).join('');
         }
 
-        function openCart() {
-            document.getElementById('cartSidebar').classList.remove('translate-x-full');
+        // カートに商品追加
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+            
+            saveCart();
+            updateCartUI();
+            showNotification('商品がカートに追加されました');
         }
 
-        function closeCart() {
-            document.getElementById('cartSidebar').classList.add('translate-x-full');
+        // カートから商品削除
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            saveCart();
+            updateCartUI();
         }
 
-        function setupEventListeners() {
-            console.log('🎉 新しいShopifyレベルECサイトが読み込まれました！');
+        // カート数量更新
+        function updateQuantity(productId, quantity) {
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity = parseInt(quantity);
+                if (item.quantity <= 0) {
+                    removeFromCart(productId);
+                } else {
+                    saveCart();
+                    updateCartUI();
+                }
+            }
         }
 
-        function showSection(section) {
-            alert(`${section}セクションは開発中です`);
+        // カートUI更新
+        function updateCartUI() {
+            const cartCount = document.getElementById('cartCount');
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            cartCount.textContent = totalItems;
+            cartTotal.textContent = `¥${totalPrice.toLocaleString()}`;
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p class="text-gray-500 text-center py-8">カートは空です</p>';
+            } else {
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="flex items-center space-x-4 p-4 border rounded-lg">
+                        <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-800">${item.name}</h4>
+                            <p class="text-gold font-bold">¥${item.price.toLocaleString()}</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <input type="number" value="${item.quantity}" min="1" 
+                                   onchange="updateQuantity(${item.id}, this.value)"
+                                   class="w-16 px-2 py-1 border rounded text-center">
+                            <button onclick="removeFromCart(${item.id})" class="text-red-500 hover:text-red-700">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
         }
 
-        function openLoginModal() {
-            alert('ログイン機能は開発中です');
+        // カート表示切り替え
+        function toggleCart() {
+            const sidebar = document.getElementById('cartSidebar');
+            const overlay = document.getElementById('cartOverlay');
+            
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('hidden');
         }
 
-        function openRegisterModal() {
-            alert('登録機能は開発中です');
+        // カート保存
+        function saveCart() {
+            localStorage.setItem('lovequeenCart', JSON.stringify(cart));
         }
+
+        // チェックアウト
+        function checkout() {
+            if (cart.length === 0) {
+                alert('カートが空です');
+                return;
+            }
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            alert(`チェックアウト機能は開発中です。\n合計: ¥${total.toLocaleString()}`);
+        }
+
+        // 通知表示
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-20 right-4 bg-gold text-white px-6 py-3 rounded-lg shadow-lg z-50';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // スムーズスクロール
+        function scrollToCollection() {
+            document.getElementById('collection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 管理者ログイン (Ctrl + Shift + A)
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                const password = prompt('管理者パスワードを入力してください:');
+                if (password === 'lovequeen2024') {
+                    isAdmin = true;
+                    document.getElementById('adminToolbar').classList.add('open');
+                    showNotification('管理者としてログインしました');
+                } else if (password !== null) {
+                    alert('パスワードが正しくありません');
+                }
+            }
+        });
+
+        // 管理者機能
+        function logout() {
+            isAdmin = false;
+            document.getElementById('adminToolbar').classList.remove('open');
+            showNotification('ログアウトしました');
+        }
+
+        function addProduct() {
+            alert('商品追加機能は開発中です');
+        }
+
+        function editMode() {
+            alert('編集モード機能は開発中です');
+        }
+
+        function viewOrders() {
+            alert('注文管理機能は開発中です');
+        }
+
+        function searchToggle() {
+            alert('検索機能は開発中です');
+        }
+
+        // レスポンシブ対応
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 768) {
+                // タブレット・PC表示の調整
+            }
+        });
     </script>
 </body>
 </html>
-
